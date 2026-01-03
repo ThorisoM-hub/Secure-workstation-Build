@@ -15,7 +15,8 @@ This project documents the end-to-end engineering of a secure, high-performance 
 ---
 
 ### SDLC Methodology (Project Lifecycle)
-I utilized the standard SDLC phases to manage the project flow from concept to completion. This ensures a professional, requirements-driven foundation based on my FIS qualifications.
+From my FIS qualification, I applied the Systems Development Life Cycle (SDLC) to manage the project flow from concept to completion. This ensures a professional, requirements-driven foundation.
+
 
 | SDLC Phase | Project Application |
 | :--- | :--- |

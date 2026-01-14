@@ -1,4 +1,4 @@
-Secure Workstation Build & Hardened Infrastructure Project
+#Secure Workstation Build & Hardened Infrastructure Project
 
 ## Project Overview
 This project documents the end-to-end security hardening and deployment of a performance-optimized workstation. I transitioned from a performance-limited Celeron system to a security-optimized Ryzen environment specifically architected to support high-density virtualization for Identity & Access Management (IAM) and SOC (Security Operations Center) labs.

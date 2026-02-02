@@ -17,11 +17,13 @@ This project documents the end-to-end security hardening and deployment of a per
 **Chapters:** Architecture, Firmware Hardening, OS Security, VPN Data Leak Prevention (DLP), and VM & configuration drift checks, including CIS benchmark audits and remediation of misconfigurations, demonstrating continuous system security monitoring.
 
 ## Demonstrated Scenarios
-- Authentication failure & brute-force simulations:events logged and reviewed in Windows Event Viewer to validate detection and response.
-- Privilege escalation detection via Windows security logs:including blocked Standard User actions and Admin special privileges, demonstrating effective enforcement of the Principle of Least Privilege.
+
+- Authentication failure & brute-force simulations: events logged and reviewed in Windows Event Viewer to validate detection and response.
+- Privilege escalation detection via Windows security logs: including blocked Standard User actions and Admin special privileges, demonstrating effective enforcement of the Principle of Least Privilege.
 - VPN kill-switch leak testing: to ensure secure connectivity and prevent data leaks during network interruptions.
-- Vulnerability patch verification & configuration drift checks:including CIS benchmark audits and remediation of misconfigurations, demonstrating continuous system security monitoring.
-– Data Loss Prevention (DLP): Enforced network-level and endpoint DLP controls through VPN kill-switch testing, full-disk encryption (BitLocker), and restricted user privileges to prevent unauthorized data exfiltration and access.
+- Vulnerability patch verification & configuration drift checks: including CIS benchmark audits and remediation of misconfigurations, demonstrating continuous system security monitoring.
+- Data Loss Prevention (DLP): enforced network-level and endpoint DLP controls through VPN kill-switch testing, full-disk encryption (BitLocker), and restricted user privileges to prevent unauthorized data exfiltration and access.
+
 ## Architecture Summary
 
 | Component | Implementation |
@@ -80,9 +82,10 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 - Hardened OS Deployment: Secure installation of Windows Pro, optimized for enterprise security.  
 - Network Configuration: Local IP assignment and connectivity verification via ICMP (Ping).  
 - Identity & Access Management (IAM): Enforcement of Principle of Least Privilege (PoLP) via Admin vs. Standard account segmentation.  
-  •Validation Action – Unauthorized Software Installation Test:  
-  Simulated an unauthorized software installation from a Standard User account to validate enforcement of the Principle of Least Privilege. The installation was blocked by UAC/admin controls (logged in Event Viewer: Event IDs 4688 – Process Creation, 4673 / 4674 – Privilege Object Access Denied), confirming effective separation between Admin and Standard user privileges.  
-  While logged in as an Admin account, I performed a system shutdown (Event ID 4672 – Special Privileges), which completed successfully, demonstrating that Admin accounts can perform elevated tasks while Standard users cannot.
+
+**Validation Action – Unauthorized Software Installation Test:**  
+Simulated an unauthorized software installation from a Standard User account to validate enforcement of the Principle of Least Privilege. The installation was blocked by UAC/admin controls (logged in Event Viewer: Event IDs 4688 – Process Creation, 4673 / 4674 – Privilege Object Access Denied), confirming effective separation between Admin and Standard user privileges.  
+While logged in as an Admin account, I performed a system shutdown (Event ID 4672 – Special Privileges), which completed successfully, demonstrating that Admin accounts can perform elevated tasks while Standard users cannot.
 
 - Data-at-Rest Encryption: Full-disk encryption via BitLocker, anchored to hardware TPM.  
 - Data Protection: Backup & Storage Solutions (The "Digital Safety Net"):  
@@ -100,25 +103,23 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 
 ### Phase 4: Validation & VM Operations
 
-8. Vulnerability Management: Ensuring the host system is fully patched via Windows Update to mitigate known CVEs.  
-   - Outcome: Detected and remediated multiple CIS benchmark deviations on initial build.  
-   - Outcome: Eliminated unnecessary services and reduced attack surface by ~30%.  
-   - Metric: Number of CVEs mitigated: tracked weekly, average 15–20 critical/high severity per month.  
-   - Metric: Patch compliance: 100% of lab and host VMs updated within 48 hours of patch release.  
-   - Metric: Configuration drift detection: weekly CIS Benchmark audits with <2 deviations.  
-   - Metric: Vulnerability scanning: quarterly scans of all VMs using OpenVAS/Nessus; results documented and remediated within 1 week.
+**Vulnerability Management:** Ensuring the host system is fully patched via Windows Update to mitigate known CVEs.  
+- Outcome: Detected and remediated multiple CIS benchmark deviations on initial build.  
+- Outcome: Eliminated unnecessary services and reduced attack surface by ~30%.  
+- Metric: Number of CVEs mitigated: tracked weekly, average 15–20 critical/high severity per month.  
+- Metric: Patch compliance: 100% of lab and host VMs updated within 48 hours of patch release.  
+- Metric: Configuration drift detection: weekly CIS Benchmark audits with <2 deviations.  
+- Metric: Vulnerability scanning: quarterly scans of all VMs using OpenVAS/Nessus; results documented and remediated within 1 week.
 
 - Hypervisor Orchestration: Deployment of VirtualBox/VMware to host security labs (Kali Linux, Windows Server).  
 
-– Security Auditing: Contiguration ot
-Windows Event Viewer to monitor security logs and access events, including blocked unauthorized software installation attempts from Standard accounts and privileged admin actions.
- • SOC Metric: Total security events reviewed: 1,000+.
- • SOC Metric: Key Event IDs analyzed:
- 4624 (Logon), 4625 (Failed Logon),
- 4672 (Special Privileges), 4688 /
- 4673 / 4674 (Process creation & privilege access attempts).
- • SOC Metric: Privilege escalation and unauthorized installation test cases:
-Multiple.
+- Security Auditing: Configuration of Windows Event Viewer to monitor security logs and access events, including blocked unauthorized software installation attempts from Standard accounts and privileged admin actions.  
+  - SOC Metric: Total security events reviewed: 1,000+.  
+  - SOC Metric: Key Event IDs analyzed:  
+    4624 (Logon), 4625 (Failed Logon),  
+    4672 (Special Privileges), 4688,  
+    4673 / 4674 (Process creation & privilege access attempts).  
+  - SOC Metric: Privilege escalation and unauthorized installation test cases: Multiple.
 
 - Disaster Recovery (DR) Planning: Documented corrective measures to restore operations using hybrid backups.  
 - Maintenance & Monitoring: Automated verification of backup integrity and semi-annual hardware dusting.  

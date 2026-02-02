@@ -21,7 +21,7 @@ This project documents the end-to-end security hardening and deployment of a per
 - Privilege escalation detection via Windows security logs:including blocked Standard User actions and Admin special privileges, demonstrating effective enforcement of the Principle of Least Privilege.
 - VPN kill-switch leak testing: to ensure secure connectivity and prevent data leaks during network interruptions.
 - Vulnerability patch verification & configuration drift checks:including CIS benchmark audits and remediation of misconfigurations, demonstrating continuous system security monitoring.
-
+– Data Loss Prevention (DLP): Enforced network-level and endpoint DLP controls through VPN kill-switch testing, full-disk encryption (BitLocker), and restricted user privileges to prevent unauthorized data exfiltration and access.
 ## Architecture Summary
 
 | Component | Implementation |

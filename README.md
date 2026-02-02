@@ -81,6 +81,9 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 - Hardened OS Deployment: Secure installation of Windows Pro, optimized for enterprise security.  
 - Network Configuration: Local IP assignment and connectivity verification via ICMP (Ping).  
 - Identity & Access Management (IAM): Enforcement of Principle of Least Privilege (PoLP) via Admin vs. Standard account segmentation.  
+  •Validation Action – Unauthorized Software Installation Test:
+Simulated an unauthorized software installation from a Standard User account to validate enforcement of the Principle of Least Privilege. The installation was blocked by UAC/admin controls, confirming effective separation between Admin and Standard user privileges.
+
 - Data-at-Rest Encryption: Full-disk encryption via BitLocker, anchored to hardware TPM.  
 - Data Protection: Backup & Storage Solutions (The "Digital Safety Net"):  
   I engineered a professional 3-2-1-1-0 Data Resiliency Framework:  

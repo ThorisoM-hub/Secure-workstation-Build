@@ -16,12 +16,11 @@ This project documents the end-to-end security hardening and deployment of a per
 
 **Chapters:** Architecture, Firmware Hardening, OS Security, VPN Data Leak Prevention (DLP), and VM Orchestration
 
-## Demonstrated Scenarios
-
-- Authentication failure & brute-force simulations  
-- Privilege escalation detection via Windows security logs  
-- VPN kill-switch leak testing  
-- Vulnerability patch verification & configuration drift checks  
+##Demonstrated Scenarios
+- Authentication failure & brute-force simulations, with events logged and reviewed in Windows Event Viewer to validate detection and response.
+- Privilege escalation detection via Windows security logs, including blocked Standard User actions and Admin special privileges, demonstrating effective enforcement of the Principle of Least Privilege.
+- VPN kill-switch leak testing to ensure secure connectivity and prevent data leaks during network interruptions.
+- Vulnerability patch verification & configuration drift checks, including CIS benchmark audits and remediation of misconfigurations, demonstrating continuous system security monitoring.
 
 ## Architecture Summary
 

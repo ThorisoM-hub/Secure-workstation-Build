@@ -83,7 +83,7 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 - Network Configuration: Local IP assignment and connectivity verification via ICMP (Ping).  
 - Identity & Access Management (IAM): Enforcement of Principle of Least Privilege (PoLP) via Admin vs. Standard account segmentation.  
 
-   **Validation Action – Unauthorized Software Installation Test:  
+   **Validation Action** – Unauthorized Software Installation Test:  
      Simulated an unauthorized software installation from a Standard User account to validate enforcement of the Principle of Least Privilege. The installation was blocked by UAC/admin controls (logged in Event Viewer: Event IDs 4688 – Process Creation, 4673 / 4674 – Privilege Object Access Denied, 4648 – Logon with Explicit Credentials when "Run as Administrator" was attempted), confirming effective separation between Admin and Standard user privileges.  
      While logged in as an Admin account, I performed a system shutdown (Event ID 4672 – Special Privileges), which completed successfully, demonstrating that Admin accounts can perform elevated tasks while Standard users cannot.
 

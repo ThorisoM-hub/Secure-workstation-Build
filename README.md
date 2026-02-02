@@ -109,7 +109,7 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
    - Metric: Vulnerability scanning: quarterly scans of all VMs using OpenVAS/Nessus; results documented and remediated within 1 week.
 
 - Hypervisor Orchestration: Deployment of VirtualBox/VMware to host security labs (Kali Linux, Windows Server).  
-Security Auditing: Contiguration ot
+-Security Auditing: Contiguration ot
 Windows Event Viewer to monitor security logs and access events, including blocked unauthorized software installation attempts from Standard accounts and privileged admin actions.
 • SOC Metric: Total security events reviewed: 1,000+.
 • SOC Metric: Key Event IDs analyzed:

@@ -109,10 +109,15 @@ Simulated an unauthorized software installation from a Standard User account to 
    - Metric: Vulnerability scanning: quarterly scans of all VMs using OpenVAS/Nessus; results documented and remediated within 1 week.
 
 - Hypervisor Orchestration: Deployment of VirtualBox/VMware to host security labs (Kali Linux, Windows Server).  
-- Security Auditing: Configuration of Windows Event Viewer to monitor security logs and access events.  
-  - SOC Metric: Total security events reviewed: 1,000+.  
-  - SOC Metric: Key Event IDs analyzed: 4624 (Logon), 4625 (Failed Logon), 4672 (Special Privileges).  
-  - SOC Metric: Privilege escalation test cases: Multiple  
+Security Auditing: Contiguration ot
+Windows Event Viewer to monitor security logs and access events, including blocked unauthorized software installation attempts from Standard accounts and privileged admin actions.
+• SOC Metric: Total security events reviewed: 1,000+.
+• SOC Metric: Key Event IDs analyzed:
+4624 (Logon), 4625 (Failed Logon),
+4672 (Special Privileges), 4688 /
+4673 / 4674 (Process creation & privilege access attempts).
+• SOC Metric: Privilege escalation and unauthorized installation test cases:
+Multiple.
 
 - Disaster Recovery (DR) Planning: Documented corrective measures to restore operations using hybrid backups.  
 - Maintenance & Monitoring: Automated verification of backup integrity and semi-annual hardware dusting.  

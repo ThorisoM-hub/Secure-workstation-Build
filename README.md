@@ -127,9 +127,8 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 
 ![Image 9: Final Engineering Station and Windows Event Viewer Security Logs]
 
-## Skills Gained Through This Project
 
-This project provided hands-on, SOC-aligned experience in monitoring, detection, validation, and security operations commonly performed in enterprise environments:
+## Skills Gained Through This Project
 
 - **SOC Monitoring & Log Analysis**  
   Analysis of Windows Security Event Logs to detect authentication failures, unauthorized process creation, privilege escalation attempts, and administrative actions using Event IDs such as 4624, 4625, 4672, 4688, 4673/4674, and 4648.

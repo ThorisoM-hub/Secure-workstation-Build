@@ -126,3 +126,55 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 - Change Control & Documentation: Maintenance of this repository as a professional audit trail.  
 
 ![Image 9: Final Engineering Station and Windows Event Viewer Security Logs]
+
+## Skills Gained Through This Project
+
+This project provided hands-on, SOC-aligned experience in monitoring, detection, validation, and security operations commonly performed in enterprise environments:
+
+- **SOC Monitoring & Log Analysis**  
+  Analysis of Windows Security Event Logs to detect authentication failures, unauthorized process creation, privilege escalation attempts, and administrative actions using Event IDs such as 4624, 4625, 4672, 4688, 4673/4674, and 4648.
+
+- **Incident Detection & Validation**  
+  Simulated real-world security events (unauthorized software installation, blocked privilege escalation, admin-only actions) and validated expected system responses through audit logs.
+
+- **Vulnerability Management**  
+  Patch verification, CVE remediation tracking, CIS benchmark audits, configuration drift detection, and vulnerability scanning using OpenVAS/Nessus.
+
+- **Identity & Access Management (IAM)**  
+  Enforcement and validation of the Principle of Least Privilege (PoLP) through Admin vs. Standard user segmentation, UAC enforcement, and privilege auditing.
+
+- **Endpoint & OS Hardening**  
+  Secure OS deployment with TPM 2.0, Secure Boot, BitLocker full-disk encryption, and reduction of attack surface through system hardening.
+
+- **Data Loss Prevention (DLP) Fundamentals**  
+  VPN kill-switch testing, full-disk encryption, and restricted user privileges to prevent unauthorized data access and data exfiltration.
+
+- **Security Validation & Control Testing**  
+  Hands-on testing of security controls with documented outcomes, confirming correct enforcement and logging behavior.
+
+- **Virtualization & Lab Operations**  
+  Deployment and management of VirtualBox/VMware environments to support SOC and security testing labs.
+
+- **Backup, Recovery & Resilience**  
+  Implementation and validation of a 3-2-1-1-0 backup strategy, restoration testing, and ransomware-resilient design principles.
+
+---
+
+## Target Roles This Project Prepares Me For
+
+This project was intentionally designed to align with real-world SOC and security operations responsibilities:
+
+- **SOC Analyst (Tier 1 / Junior)**  
+  Prepared to monitor security alerts, analyze logs, identify suspicious activity, validate security controls, and escalate confirmed incidents.
+
+- **Vulnerability Management Analyst (Junior / Entry-Level)**  
+  Prepared to support vulnerability scanning, patch management, configuration compliance, and remediation tracking.
+
+- **IAM / Access Management Analyst (Junior)**  
+  Prepared to analyze authentication and authorization events, validate privilege boundaries, and support access control enforcement.
+
+- **Junior Security Engineer / Associate Security Engineer**  
+  Prepared to assist with secure system builds, endpoint hardening, control validation, and security architecture support.
+
+- **IT Technician / Junior Systems Administrator**  
+  Prepared to support secure workstation builds, OS deployment, virtualization, monitoring, patching, and backup operations.

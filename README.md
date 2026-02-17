@@ -81,6 +81,11 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 
 * **Hardened OS Deployment:** Secure installation of Windows Pro, optimized for enterprise security.
 * **Network Configuration:** Local IP assignment and connectivity verification via ICMP (Ping).
+* **Vulnerability Management – Patch Compliance:**
+    * Performed a comprehensive **Windows Update cycle** to patch "Zero-Day" vulnerabilities and known exploits (CVEs). 
+    * Configured **Automatic Security Intelligence Updates** for Microsoft Defender to ensure the system is protected against the latest threat signatures.
+    * **Strategic Objective:** This serves as the primary defense against OS-level vulnerabilities that could lead to unauthorized system access or remote code execution (RCE). By maintaining a "Fully Patched" state, the attack surface is minimized, effectively neutralizing known exploit vectors before they can be leveraged by an adversary.
+
 * **Fail-Secure Connectivity (VPN Kill-Switch):** Implementation of a **Permanent Kill-Switch** policy via Proton VPN. Performed a "Hard Drop" test by disabling the physical network interface; verified immediate termination of all outbound traffic (ICMP/HTTP) to prevent clear-text data leakage outside the encrypted tunnel.
 * **DNS Anti-Spoofing & Integrity:** Enforced the use of **Private, Encrypted DNS** via the VPN tunnel to mitigate **DNS Cache Poisoning** and Man-in-the-Middle (MITM) attacks. This ensures that identity-related traffic (login portals) cannot be redirected to malicious IP addresses.
 * **Gateway-Level Security (Rain Router):** Configured **Edge URL Filtering** via the Rain Web Gateway. Restricted unauthorized domains (e.g., `facebook.com`) at the DNS level to reduce the external attack surface and mitigate Shadow IT risks.

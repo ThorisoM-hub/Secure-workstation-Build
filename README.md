@@ -153,6 +153,9 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 - **Endpoint & OS Hardening**  
   Secure OS deployment with TPM 2.0, Secure Boot, BitLocker full-disk encryption, and reduction of attack surface through system hardening.
 
+- **Network-Level Security & DLP Fundamentals
+Implementation of Fail-Secure connectivity through VPN kill-switch testing, DNS Anti-Spoofing (DoH), and Gateway-level URL Filtering. Enforced network-level and endpoint controls to prevent unauthorized data exfiltration
+
 - **Data Loss Prevention (DLP) Fundamentals**  
   VPN kill-switch testing, full-disk encryption, and restricted user privileges to prevent unauthorized data access and data exfiltration.
 

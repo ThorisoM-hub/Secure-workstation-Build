@@ -122,6 +122,7 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
     * **0 Errors:** Verified via restoration drills (RTO < 15 mins).
 
 
+
 ![Image 6: Windows Security Dashboard (Green Checks)]  
 ![Image 7: BitLocker Encryption Status & VPN Kill Switch settings]  
 ![Image 8: IAM Setup - Admin vs. Standard User account segmentation]

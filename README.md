@@ -145,7 +145,8 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
   Simulated real-world security events (unauthorized software installation, blocked privilege escalation, admin-only actions) and validated expected system responses through audit logs.
 
 - **Vulnerability Management**  
-  Patch verification, CVE remediation tracking, CIS benchmark audits, configuration drift detection, and vulnerability scanning using OpenVAS/Nessus.
+  Patch verification, CVE remediation tracking, CIS benchmark audits &configuration drift detection.This includes the implementation of Automatic Security Intelligence Updates to mitigate Zero-Day exploits.
+
 
 - **Identity & Access Management (IAM)**  
   Enforcement and validation of the Principle of Least Privilege (PoLP) through Admin vs. Standard user segmentation, UAC enforcement, and privilege auditing.
@@ -153,7 +154,7 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 - **Endpoint & OS Hardening**  
   Secure OS deployment with TPM 2.0, Secure Boot, BitLocker full-disk encryption, and reduction of attack surface through system hardening.
 
-- **Network-Level Security & DLP Fundamentals
+- **Network-Level Security & DLP Fundamentals**
 Implementation of Fail-Secure connectivity through VPN kill-switch testing, DNS Anti-Spoofing (DoH), and Gateway-level URL Filtering. Enforced network-level and endpoint controls to prevent unauthorized data exfiltration
 
 - **Data Loss Prevention (DLP) Fundamentals**  

@@ -77,50 +77,29 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 ![Image 4: Physical PC Interior/Cabling]  
 ![Image 5: BIOS Screen showing TPM 2.0 & Secure Boot ENABLED]
 
-## Phase 3: Implementation & Security Hardening
+### Phase 3: Implementation & Security Hardening
 
-### 1. Hardened OS Deployment
-* **Environment:** Secure installation of Windows 11 Pro, optimized for enterprise-grade security.
-* **Network Foundation:** Static Local IP assignment with connectivity verification via ICMP (Ping) to establish a stable internal baseline.
-
-### 2. Fail-Secure Connectivity (VPN Kill-Switch)
-* **Policy:** Implementation of a **Permanent Kill-Switch** via Proton VPN.
-* **Validation:** Performed a "Hard Drop" test by manually disabling the physical network interface. 
-* **Result:** Verified 0% data leakage; all outbound traffic (ICMP/HTTP) was immediately terminated, preventing clear-text exposure outside the encrypted tunnel.
-
-
-### 3. DNS Integrity & Anti-Spoofing
-* **Control:** Enforced private, encrypted DNS lookups through the VPN tunnel.
-* **Objective:** Mitigates **DNS Cache Poisoning** and **Man-in-the-Middle (MITM)** attacks. This ensures that identity-sensitive login portals (IAM) cannot be redirected to malicious IP addresses.
+* **Hardened OS Deployment:** Secure installation of Windows Pro, optimized for enterprise security.
+* **Network Configuration:** Local IP assignment and connectivity verification via ICMP (Ping).
+* **Fail-Secure Connectivity (VPN Kill-Switch):** Implementation of a **Permanent Kill-Switch** policy via Proton VPN. Performed a "Hard Drop" test by disabling the physical network interface; verified immediate termination of all outbound traffic (ICMP/HTTP) to prevent clear-text data leakage outside the encrypted tunnel.
+* **DNS Anti-Spoofing & Integrity:** Enforced the use of **Private, Encrypted DNS** via the VPN tunnel to mitigate **DNS Cache Poisoning** and Man-in-the-Middle (MITM) attacks. This ensures that identity-related traffic (login portals) cannot be redirected to malicious IP addresses.
+* **Gateway-Level Security (Rain Router):** Configured **Edge URL Filtering** via the Rain Web Gateway. Restricted unauthorized domains (e.g., `facebook.com`) at the DNS level to reduce the external attack surface and mitigate Shadow IT risks.
+* **Host-Based Defense (Windows Firewall):** Implemented custom **Outbound Traffic Rules** within Windows Defender Firewall with Advanced Security. Implemented micro-segmentation by blocking specific non-authorized binaries from initiating external connections, simulating anti-exfiltration controls.
+* **Identity & Access Management (IAM):** Enforcement of Principle of Least Privilege (PoLP) via Admin vs. Standard account segmentation.
+    * **IAM Control:** Segmented **Backup-Admin** privileges to ensure only authorized identities can modify or delete the archive.
+    * **Validation Action – Unauthorized Software Installation Test:**
+        Simulated an unauthorized software installation from a Standard User account to validate enforcement of the Principle of Least Privilege. The installation was blocked by UAC/admin controls (logged in Event Viewer: Event ID 4624 (Logon), Event ID 4625 (Failed Logon), Event ID 4672 (Special Privileges), Event ID 4688 (Process Creation), and Event IDs 4673 / 4674 (Sensitive Privilege Use / Privilege Object Access Denied)), confirming effective separation between Admin and Standard user privileges.
+        While logged in as an Admin account, I performed a system shutdown (Event ID 4672 – Special Privileges), which completed successfully, demonstrating that Admin accounts can perform elevated tasks while Standard users cannot.
 
 
-### 4. Gateway-Level Security (Rain Router)
-* **Edge Defense:** Configured **Edge URL Filtering** via the Rain Web Gateway.
-* **Control:** Restricted unauthorized domains (e.g., `facebook.com`) at the DNS level to reduce the external attack surface and mitigate Shadow IT risks.
-
-### 5. Host-Based Defense (Windows Firewall)
-* **Micro-segmentation:** **Implemented** custom Outbound Traffic Rules within Windows Defender Firewall with Advanced Security.
-* **Logic:** Blocked non-authorized binaries from initiating external connections, simulating enterprise anti-exfiltration controls.
-
-
-### 6. Identity & Access Management (IAM)
-* **Principle:** Enforcement of **Principle of Least Privilege (PoLP)** via Admin vs. Standard account segmentation.
-* **Privilege Control:** Segmented **Backup-Admin** privileges to ensure only authorized identities can modify or delete the archive.
-* **Validation Action (Installation Test):**
-    * Simulated an unauthorized software installation from a Standard User account.
-    * **Result:** Installation blocked by UAC/Admin controls.
-    * **Forensic Evidence:** Logged in Windows Event Viewer under **Event IDs 4688** (Process Creation) and **4673** (Sensitive Privilege Use).
-
-
-### 7. Data Protection & Resiliency (The "Digital Safety Net")
-* **Encryption:** Full-disk encryption via **BitLocker**, anchored to hardware TPM.
-* **3-2-1-1-0 Framework:** Engineered for **"Thoriso_critical_files.zip"**:
-    * **3 Copies:** Original + 2 backups.
-    * **2 Media Types:** Internal HDD + Removable USB (Logical Air-Gap).
-    * **1 Offsite:** Secure Cloud replication.
-    * **1 Immutable:** **WORM** (Write Once, Read Many) copy to prevent Ransomware modification.
-    * **0 Errors:** Verified via restoration drills (RTO < 15 mins).
-
+* **Data-at-Rest Encryption:** Full-disk encryption via BitLocker, anchored to hardware TPM.
+* **Data Protection: Backup & Storage Solutions (The "Digital Safety Net"):**
+    I engineered a professional **3-2-1-1-0 Data Resiliency Framework** for **"Thoriso_critical_files.zip"**:
+    * **3 Copies:** Original project files + 2 backup versions.
+    * **2 Media Types:** Primary Host HDD (Internal) and Removable USB Media (External/Logical Air-Gap).
+    * **1 Offsite Replicate:** Archives synced to a secure Cloud location.
+    * **1 Immutable:** A "locked" copy (WORM) to prevent lateral ransomware movement.
+    * **0 Errors:** Restoration Drills to prove RTO <15 mins.
 
 
 ![Image 6: Windows Security Dashboard (Green Checks)]  

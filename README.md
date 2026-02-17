@@ -106,7 +106,7 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 ![Image 6: Windows Security Dashboard (Green Checks)]  
 ![Image 7: BitLocker Encryption Status & VPN Kill Switch settings]  
 ![Image 8: IAM Setup - Admin vs. Standard User account segmentation]
-
+ ![Image 9: Windows Command Prompt showing "General failure" during VPN Hard-Drop test]
 ## Phase 4: Validation & SOC Operations
 
 ### SOC Auditing & Incident Monitoring

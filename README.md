@@ -107,32 +107,34 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 ![Image 7: BitLocker Encryption Status & VPN Kill Switch settings]  
 ![Image 8: IAM Setup - Admin vs. Standard User account segmentation]
 
-### Phase 4: Validation & VM Operations
+## Phase 4: Validation & SOC Operations
 
-**Vulnerability Management:** Ensuring the host system is fully patched via Windows Update to mitigate known CVEs.  
-- Outcome: Detected and remediated multiple CIS benchmark deviations on initial build.  
-- Outcome: Eliminated unnecessary services and reduced attack surface by ~30%.  
-- Metric: Number of CVEs mitigated: tracked weekly, average 15–20 critical/high severity per month.  
-- Metric: Patch compliance: 100% of lab and host VMs updated within 48 hours of patch release.  
-- Metric: Configuration drift detection: weekly CIS Benchmark audits with <2 deviations.  
-- Metric: Vulnerability scanning: quarterly scans of all VMs using OpenVAS/Nessus; results documented and remediated within 1 week.
+### SOC Auditing & Incident Monitoring
+* **Security Event Analysis:** Established a rigorous monitoring baseline by auditing system logs to distinguish between authorized behavior and potential IOCs (Indicators of Compromise).
+* **SOC Metric - Event Volume:** Total security events reviewed: **1,000+**.
+* **SOC Metric - Key Event IDs Analyzed:**
+    * **4624** (Successful Logon) / **4625** (Failed Logon)
+    * **4672** (Administrative/Special Privileges Assigned)
+    * **4688** (New Process Creation)
+    * **4673 / 4674** (Sensitive Privilege Use & Privilege Access attempts)
+* **SOC Metric - Defensive Validation:** Documented multiple test cases for **Privilege Escalation** and **Unauthorized Installation attempts**, confirming that PoLP (Principle of Least Privilege) controls successfully triggered "Access Denied" events.
 
-- Hypervisor Orchestration: Deployment of VirtualBox/VMware to host security labs (Kali Linux, Windows Server).  
+### Continuous Maintenance & Compliance
+* **Attack Surface Management:** Performed service hardening by disabling non-essential background processes, reducing the host's potential exploit vectors.
+* **Patch Compliance:** Maintained a 100% remediation rate for critical OS vulnerabilities by verifying all security updates within 48 hours of release.
+* **Metric - Configuration Drift:** Conducted weekly manual audits of local security policies to ensure no deviations from the hardened baseline.
 
-- Security Auditing: Configuration of Windows Event Viewer to monitor security logs and access events, including blocked unauthorized software installation attempts from Standard accounts and privileged admin actions.  
-  - SOC Metric: Total security events reviewed: 1,000+.  
-  - SOC Metric: Key Event IDs analyzed:  
-    4624 (Logon), 4625 (Failed Logon),  
-    4672 (Special Privileges), 4688,  
-    4673 / 4674 (Process creation & privilege access attempts).  
-  - SOC Metric: Privilege escalation and unauthorized installation test cases: Multiple.
+### Disaster Recovery (DR) & Documentation
+* **Disaster Recovery (DR) Planning:** Documented corrective measures to restore operations using hybrid backups (Cloud/Local), ensuring data availability and business continuity.
+* **Resiliency Audit:** Verified backup integrity through restoration drills, ensuring data availability using the **3-2-1-1-0 framework**.
+* **Maintenance & Monitoring:** Implemented automated verification of backup integrity and scheduled semi-annual hardware maintenance (physical dusting and thermal optimization).
+* **Change Control:** All system modifications and security policy updates are documented within this repository as a permanent audit trail for professional review.
 
-- Disaster Recovery (DR) Planning: Documented corrective measures to restore operations using hybrid backups.  
-- Maintenance & Monitoring: Automated verification of backup integrity and semi-annual hardware dusting.  
-- Change Control & Documentation: Maintenance of this repository as a professional audit trail.  
+---
+
+### Phase 4: Visual Evidence
 
 ![Image 9: Final Engineering Station and Windows Event Viewer Security Logs]
-
 
 ## Skills Gained Through This Project
 

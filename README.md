@@ -1,5 +1,69 @@
 # Secure Workstation Build & Hardened Infrastructure Project
+# Secure Workstation Build & Hardened Infrastructure Project
 
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Architecture & Hardware](#architecture--hardware)
+3. [Implementation & Hardening](#implementation--hardening)
+4. [Security Validation & Testing](#security-validation--testing)
+5. [Monitoring & SOC Operations](#monitoring--soc-operations)
+6. [Data Resilience & Backup](#data-resilience--backup)
+7. [SDLC Methodology](#sdlc-methodology)
+8. [Skills Gained](#skills-gained)
+9. [Target Roles](#target-roles)
+
+---
+
+<details>
+<summary>Project Overview</summary>
+
+This project documents the end-to-end security hardening and deployment of a performance-optimized workstation. I transitioned from a Celeron system to a Ryzen environment specifically architected to support high-density virtualization for IAM and SOC labs.
+
+**Transformation Highlights:**
+- VM boot times reduced 60–70%
+- Lab stability improved to 24/7 operation
+- Capacity increased from 1–2 VMs → 3–5 stable VMs simultaneously
+
+[Watch Technical Execution Video](#)
+</details>
+
+<details>
+<summary>Architecture & Hardware</summary>
+
+**Components:**
+- CPU: AMD Ryzen 6C/12T  
+- Memory: 16 GB DDR4  
+- Firmware Security: TPM 2.0, UEFI Secure Boot  
+- Host OS: Windows 10/11 Pro (Hardened)  
+- Hypervisor: VirtualBox / VMware  
+- Guest OS: Kali Linux, Windows Server  
+- Network: Cat6 Ethernet to ISP Gateway  
+- Encryption: BitLocker (TPM-bound)
+
+**Network Diagram:**  
+![Cisco Packet Tracer Diagram](#)
+</details>
+
+<details>
+<summary>Implementation & Hardening</summary>
+
+- Hardened OS deployment with secure settings
+- VPN Kill-Switch DLP testing
+- Windows Firewall outbound micro-segmentation
+- NextDNS C2 & NRD blocking
+- Sysmon behavioral monitoring
+</details>
+
+<details>
+<summary>Security Validation & Testing</summary>
+
+- Event ID auditing: 4624, 4625, 4672, 4688, 4673/4674  
+- Privilege escalation detection  
+- Vulnerability patch verification & CIS benchmark audits  
+- Hard Drop VPN & network testing
+</details>
+
+...
 ## Project Overview
 
 This project documents the end-to-end security hardening and deployment of a performance-optimized workstation. I transitioned from a performance-limited Celeron system to a security-optimized Ryzen environment specifically architected to support high-density virtualization for Identity & Access Management (IAM) and SOC (Security Operations Center) labs.

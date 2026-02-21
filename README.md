@@ -81,13 +81,89 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 
 ### Phase 3: Implementation & Security Hardening
 
-* **Hardened OS Deployment:** Secure installation of Windows Pro, optimized for enterprise security.
-* **Network Configuration:** Local IP assignment and connectivity verification via ICMP (Ping).
-* **Vulnerability Management (Patch Compliance):** Completed a full **Windows Update cycle** and configured **Automatic Security Intelligence Updates** to mitigate Zero-Day exploits and known CVEs.
-* **Fail-Secure Connectivity (VPN Kill-Switch):** Implementation of a **Permanent Kill-Switch** policy via Proton VPN. Performed a "Hard Drop" test by disabling the physical network interface; verified immediate termination of all outbound traffic (ICMP/HTTP) to prevent clear-text data leakage outside the encrypted tunnel.
-* **DNS Anti-Spoofing & Integrity:** Enforced the use of **Private, Encrypted DNS** via the VPN tunnel to mitigate **DNS Cache Poisoning** and Man-in-the-Middle (MITM) attacks. This ensures that identity-related traffic (login portals) cannot be redirected to malicious IP addresses.
-* **Gateway-Level Security (Rain Router):** Configured **Edge URL Filtering** via the Rain Web Gateway. Restricted unauthorized domains (e.g., `facebook.com`) at the DNS level to reduce the external attack surface and mitigate Shadow IT risks.
-* **Host-Based Defense (Windows Firewall):** Implemented custom **Outbound Traffic Rules** within Windows Defender Firewall with Advanced Security. Implemented micro-segmentation by blocking specific non-authorized binaries from initiating external connections, simulating anti-exfiltration controls.
+**Hardened OS Deployment:** Secure installation of Windows Pro, optimized for enterprise security.
+
+**Network Configuration:** Local IP assignment and connectivity verification via ICMP (Ping).
+
+**Vulnerability Management (Patch Compliance):** Completed a full Windows Update cycle and configured Automatic Security Intelligence Updates to mitigate Zero-Day exploits and known CVEs.
+
+**Fail-Secure Connectivity (VPN Kill-Switch):** Implementation of a Permanent Kill-Switch policy via Proton VPN. Performed a "Hard Drop" test by disabling the physical network interface; verified via Command Prompt ("General failure" results) the immediate termination of all outbound traffic (ICMP/HTTP) to prevent clear-text data leakage outside the encrypted tunnel.
+
+**DNS Anti-Spoofing & Integrity:** Enforced the use of Private, Encrypted DNS via the VPN tunnel to mitigate DNS Cache Poisoning and Man-in-the-Middle (MITM) attacks. This ensures that identity-related traffic (login portals) cannot be redirected to malicious IP addresses.
+
+**Gateway-Level Security (Rain Router):** Configured Edge URL Filtering via the Rain Web Gateway. Restricted unauthorized domains (e.g., facebook.com) at the DNS level to reduce the external attack surface and mitigate Shadow IT risks.
+
+**Host-Based Defense (Windows Firewall):** Implemented custom Outbound Traffic Rules within Windows Defender Firewall with Advanced Security. Implemented micro-segmentation by blocking specific non-authorized binaries from initiating external connections, simulating anti-exfiltration controls.
+
+> ### Security Logic: What these controls protect against
+> This defensive setup transitions the workstation to a **"Zero Trust"** posture by controlling not just who enters, but what is allowed to leave. Below is the breakdown of the specific threats neutralized by these firewall rules:
+>
+> * **The "Security Guard at the Exit" (Data Theft / Egress Filtering)**
+>     * **Non-Technical:** Like a bank guard checking every bag at the exit; if you don't have an "Authorized to Carry" badge, you can’t leave with anything.
+>     * **Technical:** This is **Egress Filtering**. By controlling outbound traffic, we stop **Data Exfiltration**. Even if malware bypasses initial entry, it cannot "phone home" to an attacker’s server to send stolen passwords or files.
+> * **The "Approved Employee List" (Imposter Employee / Binary Whitelisting)**
+>     * **Non-Technical:** The building manager only lets 5 specific employees use the office phone. If your name isn't on the list, you can't call out.
+>     * **Technical:** This is **Application-Level Micro-segmentation**. It shifts from "Blacklisting" (blocking known bad apps) to **"Whitelisting"** (only allowing authorized binaries). This stops **"Living-off-the-Land" (LotL)** attacks where hackers try to use built-in Windows tools like PowerShell to reach the web.
+> * **The "Firewalled Rooms" (Spread of Fire / Lateral Movement)**
+>     * **Non-Technical:** In a hotel, if a fire starts in the kitchen, steel doors slam shut to keep the smoke from reaching guest rooms.
+>     * **Technical:** This is **Host-Based Micro-segmentation**. It prevents **Lateral Movement**. If one application is hacked, the attacker is "trapped" in that process and cannot probe or attack other devices on your local network.
+> * **The "Broken Remote Control" (Backdoor Entry / Reverse Shell)**
+>     * **Non-Technical:** A thief sneaks in and tries to use a remote to open the garage for his friends, but you’ve removed the batteries. He’s stuck inside and can't coordinate with his team.
+>     * **Technical:** This prevents **Reverse Shells**. Attackers often run a script that "reaches out" to their computer to give them full remote control. Blocking unauthorized binaries from initiating external connections kills this "inside-out" connection.
+
+### Critical Blind Spots: What Windows Firewall Cannot Do
+As a SOC Analyst, it is vital to understand where a tool's power ends. While Windows Firewall is powerful, it has "invisible" gaps:
+* **Lack of Deep Packet Inspection (DPI):** The firewall is "Stateful"—it looks at the label on the envelope (IP/Port) but not inside. If a hacker hides stolen data inside an authorized HTTPS request, the firewall lets it pass.
+* **Evasion via Process Injection:** Malware hijacks a "good" process (like `explorer.exe`) already allowed to go online. Since the identity is trusted, the firewall cannot tell the process has been hijacked from the inside.
+* **Administrative Bypass:** As a host-based defense, an attacker with Local Admin rights can simply run a command to disable the firewall.
+* **IP Spoofing & Memory Attacks:** It trusts source information provided by the network card and cannot see "Buffer Overflows" happening entirely inside the RAM.
+
+### Layer 2: DNS-Layer Defense (Network Infrastructure Intelligence)
+**Tooling:** **NextDNS** (Cloud-Based Intelligence Layer)  
+Since Windows Firewall handles the **"What"** (the program), NextDNS was implemented to handle the **"Where"** (the destination), acting as the "Intelligence Agency" for the workstation.
+
+* **C2 Threat Intelligence (The "Bad Neighborhood" Filter):**
+    * **Non-Technical:** Like an intelligence agency providing a list of "Scam Phone Numbers." Even if an employee is allowed to use the phone, the call is blocked if they try to dial a known scammer.
+    * **Technical:** NextDNS maintains a massive, real-time list of **Command & Control (C2)** "Bad Neighborhoods." If any app tries to connect to a domain used for hacking, NextDNS kills the connection before it starts.
+* **Newly Registered Domain (NRD) Blocking:**
+    * **Non-Technical:** Blocking all calls from phone numbers created in the last 24 hours. Legitimate businesses don't change their numbers every day; scammers do.
+    * **Technical:** A proactive **Vulnerability Management** control. By blocking any domain created in the last 30 days, I neutralized the "disposable" infrastructure hackers use for one-time phishing attacks.
+* **DGA (Domain Generation Algorithm) Protection:**
+    * **Non-Technical:** Spotting "gibberish" or "coded" language. If someone tries to call a number that looks like random noise (e.g., `xhz123.net`), the system recognizes it as a machine-generated trap.
+    * **Technical:** Malware uses math to create 1,000 random names a day. NextDNS uses AI to recognize these "gibberish" names and blocks them automatically.
+* **Anti-Stealth Toggles:** Enabled protection against **DNS Rebinding** and **Cryptojacking**, stopping browser-based resource theft that typically bypasses standard firewalls.
+
+### Layer 3: Behavioral Monitoring & Vulnerability Assessment
+* **Behavioral Logging (Sysmon):**
+    * **Non-Technical:** Like a security camera inside the office. The firewall stops people at the door, but Sysmon records if an employee starts acting strangely once they are inside.
+    * **Technical:** It logs **Process Injection** and lateral movement, providing the visibility needed for a SOC Analyst to detect stealthy movement that the firewall trusts.
+* **Vulnerability Assessment (Nessus Essentials/OpenVAS):**
+    * **Non-Technical:** A "Home Inspection" for digital locks. It searches for windows left unlocked so they can be fixed before a thief finds them.
+    * **Technical:** Implemented periodic scanning to find unpatched software. This allows for **Compensating Controls**—blocking specific binaries in the firewall until a patch is available.
+
+### Defense-in-Depth: Solving the Loopholes
+The following table illustrates how the secondary layers (NextDNS, Sysmon, Nessus) solve the specific problems that Windows Firewall cannot address alone.
+
+| Windows Firewall Limitation | Secondary Solution | How it Solves the Problem |
+| :--- | :--- | :--- |
+| **Encrypted Data Exfiltration** | NextDNS (DPI/Reputation) | Blocks the malicious destination even if the data is encrypted. |
+| **Process/Code Injection** | Sysmon (Behavioral) | Logs unauthorized interactions between "good" apps and malicious code. |
+| **Admin Bypass** | Standard User Policy | Prevents an attacker from modifying or disabling firewall rules. |
+| **Zero-Day "Memory" Attacks** | Nessus (Vulnerability Scanning) | Identifies unpatched apps so they can be hardened before exploitation. |
+| **Domain Fronting** | NextDNS (AI Detection) | Detects unusual DNS requests that bypass IP-based firewall rules. |
+
+### Threat & Defense Technical Summary
+
+| Threat (Simple Name) | Technical Threat | Defense Mechanism | How it Protects You |
+| :--- | :--- | :--- | :--- |
+| **The "Phone Home"** | C2 (Command & Control) | Egress Filtering / NextDNS | Stops malware from contacting the hacker's server for instructions. |
+| **The "Imposter Employee"** | LotL / LOLBins | Binary-Level Blocking | Prevents built-in tools (PowerShell) from being used maliciously. |
+| **The "Backdoor Entry"** | Reverse Shell | Auth. Connection Rules | Prevents an internal script from "opening a door" to the outside. |
+| **The "Spread of Fire"** | Lateral Movement | Micro-segmentation | Traps a hacker in one "box" so they can't jump to other devices. |
+| **The "Drafted Zombie"** | Botnet Recruitment | Outbound Traffic Control | Prevents the system from being recruited into a zombie army for DDoS. |
+| **The "Data Thief"** | Exfiltration | Anti-Exfiltration / NRD | Blocks unauthorized apps or new domains from stealing your data. |
+| **The "Ghost in the Machine"** | Zero-Day Exploits | Compensating Controls | Even if a bug is unknown, the hacker can't "call out" to finish the infection. |
+
 * **Identity & Access Management (IAM):** Enforcement of Principle of Least Privilege (PoLP) via Admin vs. Standard account segmentation.
     * **IAM Control:** Segmented **Backup-Admin** privileges to ensure only authorized identities can modify or delete the archive.
     * **Validation Action – Unauthorized Software Installation Test:**

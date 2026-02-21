@@ -213,13 +213,18 @@ The following table illustrates how the secondary layers (NextDNS, Sysmon, Nessu
     * **2 Media Types:** Primary Host HDD (Internal) and Removable USB Media (External/Logical Air-Gap).
     * **1 Offsite Replicate:** Archives synced to a secure Cloud location.
     * **1 Immutable:** A "locked" copy (WORM) to prevent lateral ransomware movement.
-    * **0 Errors:** Restoration Drills to prove RTO <15 mins.
+    * **0 Errors:** Restoration Drills to prove RTO <15 
+
+![Image 6: Windows Security Dashboard (Green Checks)]
+![Image 7: BitLocker Encryption Status & VPN Kill Switch settings]
+![Image 8: IAM Setup - Admin vs. Standard User account segmentation] 
+![Image 9: Windows Command Prompt showing "General failure" during VPN Hard-Drop test]
+![Image 10: Windows Firewall - Custom Outbound Rules for Micro-segmentation]
+![Image 11: NextDNS Analytics - Blocking C2 and NRD attempts]
+![Image 12: Sysmon Event ID 3 - Capturing unauthorized network connection attempt]
+![Image 13: Nessus Scan Results - Clean Baseline & Remediation Report]
 
 
-![Image 6: Windows Security Dashboard (Green Checks)]  
-![Image 7: BitLocker Encryption Status & VPN Kill Switch settings]  
-![Image 8: IAM Setup - Admin vs. Standard User account segmentation]
- ![Image 9: Windows Command Prompt showing "General failure" during VPN Hard-Drop test]
 ## Phase 4: Validation & SOC Operations
 ### Virtualization Deployment (The Technical Sandbox)
 

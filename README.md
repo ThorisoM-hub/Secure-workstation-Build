@@ -1,7 +1,5 @@
 # Secure Workstation Build & Hardened Infrastructure Project
 
-# Secure Workstation Build & Hardened Infrastructure Project
-
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Architecture & Hardware](#architecture--hardware)

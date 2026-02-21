@@ -146,8 +146,7 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 ### Phase 4: Visual Evidence
 
 ![Image 9: Final Engineering Station and Windows Event Viewer Security Logs]
-![Image 10: Multi-Node Lab Orchestration - VMware Workstation Pro](path/to/your/image10.png)
-
+![Image 10: Multi-Node Lab Orchestration - VMware Workstation Pro]
 ## Skills Gained Through This Project
 
 - **SOC Monitoring & Log Analysis**  

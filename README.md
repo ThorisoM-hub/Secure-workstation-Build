@@ -22,9 +22,14 @@ This project documents the end-to-end security hardening and deployment of a per
 * Lab stability improved from intermittent crashes to 24/7 sustained operation
 * Capacity increased from 1–2 limited VMs to 3–5 stable VMs simultaneously
 
-[Watch the Technical Execution Video on YouTube]
+<a name="technical-execution-video"></a>
+## [Watch the Technical Masterclass (30 min Video)](#)
 
-**Chapters:** Architecture, Firmware Hardening, OS Security, VPN Data Leak Prevention (DLP), and VM & configuration drift checks, including CIS benchmark audits and remediation of misconfigurations, demonstrating continuous system security monitoring.
+**Video Chapters:**
+* **Phase 1:** Architecture & Hardware Justification (Celeron vs. Ryzen)
+* **Phase 2:** Firmware Hardening, OS Deployment & VPN Kill-Switch Testing
+* **Phase 3:** IAM Validation, SOC Monitoring & Vulnerability Remediation
+* **Phase 4:** Data Resiliency & 3-2-1-1-0 Backup Restoration Drills
 
 ---
 

@@ -1,154 +1,157 @@
-
 # Secure Workstation Build & Hardened Infrastructure Project
-
-
-
-
----
-
-### Project Overview & "The Transformation"
-This project documents the end-to-end security hardening and deployment of a performance-optimized workstation. I transitioned from a legacy Celeron system to a security-optimized AMD Ryzen (6C/12T) environment specifically architected to support High-Density Virtualization for Identity & Access Management (IAM) and SOC (Security Operations Center) labs.
-
-* Performance Delta: VM boot times reduced by approximately 60–70%.
-* Stability: Transitioned from intermittent crashes to 24/7 sustained uptime.
-* Capacity: Scaled from 1–2 limited VMs to 3-5 stable concurrent VMs.
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Architecture & Hardware](#architecture--hardware)
+3. [Implementation & Hardening](#implementation--hardening)
+4. [Security Validation & Testing](#security-validation--testing)
+5. [Monitoring & SOC Operations](#monitoring--soc-operations)
+6. [Data Resilience & Backup](#data-resilience--backup)
+7. [SDLC Methodology](#sdlc-methodology)
+8. [Skills Gained](#skills-gained)
+9. [Target Roles](#target-roles)
 
 ---
 
-### Technical Execution Video
-[Watch the 30-Minute Technical Masterclass on YouTube](YOUR_LINK_HERE)
-*Timestamps provided in video description for: Architecture, Firmware Hardening, VPN Kill-Switch Testing, and SOC Auditing.*
+## Project Overview
+This project documents the end-to-end security hardening and deployment of a performance-optimized workstation. I transitioned from a performance-limited Celeron system to a security-optimized Ryzen environment specifically architected to support high-density virtualization for Identity & Access Management (IAM) and SOC (Security Operations Center) labs.
+
+### The Transformation: Celeron Bottleneck vs. Ryzen Solution
+![Image 1: Collage – Old Celeron Laptop vs. New MSI/Ryzen Engineering Build]
+
+* VM boot times reduced by approximately 60–70%
+* Lab stability improved from intermittent crashes to 24/7 sustained operation
+* Capacity increased from 1–2 limited VMs to 3–5 stable VMs simultaneously
+
+[Watch the Technical Execution Video on YouTube]
+Chapters: Architecture, Firmware Hardening, OS Security, VPN Data Leak Prevention (DLP), and VM & configuration drift checks, including CIS benchmark audits and remediation of misconfigurations.
 
 ---
 
-### Table of Contents (Interactive)
-1. Architecture Summary
-2. SDLC Methodology
-3. Demonstrated Scenarios & Technical Validations
-4. Phase 4: Validation & SOC Operations (The Sandbox)
-5. 18-Step Technical Manifest (Deep Dive)
-6. Skills Gained & Target Roles
+## Demonstrated Scenarios & Technical Validations
+
+### Authentication & Privilege Auditing
+* **Brute-force simulations:** Events logged and reviewed in Windows Event Viewer. Established a rigorous monitoring baseline by auditing Event IDs 4624 (Success) and 4625 (Failure), reviewing a volume of 1,000+ security events to distinguish authorized behavior from potential IOCs.
+* **Privilege escalation detection:** Validated enforcement of the Principle of Least Privilege (PoLP). Confirmed via Event IDs 4672, 4688, and 4673/4674 that Standard User accounts triggered "Access Denied" logs during unauthorized installation attempts.
+
+![Image 8: IAM Setup - Admin vs. Standard User account segmentation]
+
+### Network & Data Leak Prevention (DLP)
+* **VPN kill-switch leak testing:** Performed a "Hard Drop" test by disabling the physical network interface; verified via Command Prompt ("General failure" results) the immediate termination of all outbound traffic (ICMP/HTTP) to prevent clear-text leakage.
+![Image 9: Windows Command Prompt showing "General failure" during VPN Hard-Drop test]
+
+* **Host-Based Defense (Windows Firewall):** Implemented custom Outbound Traffic Rules. 
+![Image 10: Windows Firewall - Custom Outbound Rules for Micro-segmentation]
 
 ---
-
-### Architecture Summary
-| Component | Implementation |
-| :--- | :--- |
-| CPU | AMD Ryzen 5 (6C/12T) |
-| Memory | 16 GB DDR4 (Optimized for Virtualization) |
-| Firmware Security | TPM 2.0, UEFI Secure Boot (Root of Trust) |
-| Encryption | BitLocker (TPM-bound Full Disk Encryption) |
-| Host OS | Windows 10/11 Pro (Hardened Baseline) |
-| Hypervisor | VMware Workstation / VirtualBox |
-| Network | Cat6 Physical Link to Rain Web Gateway |
-
----
-
-### SDLC Methodology (Project Lifecycle)
-Drawing from my Financial Information Systems (FIS) qualification, I applied the Systems Development Life Cycle (SDLC) to manage the project flow. This ensures a professional, requirements-driven foundation suitable for audited corporate environments.
-
-
 
 <details>
-<summary><b>Click to Expand: SDLC Project Mapping</b></summary>
+<summary><b>Click to Expand: Security Logic & Defensive Analogies</b></summary>
 
-| SDLC Phase | Technical Project Application |
-| :--- | :--- |
-| 1. Planning | Defined scope for high-density virtualization; requirement setting for 6C/12T architecture. |
-| 2. Analysis | Conducted hardware gap analysis; identified Celeron lack of SLAT/VT-x support. |
-| 3. Design | Developed logical system architecture; mapped network path via Cisco Packet Tracer. |
-| 4. Implementation | Physical assembly, Thermal Management (65–72°C), and Hardened OS deployment. |
-| 5. Testing | Verification & Validation (V&V); Hardware stress-testing and TPM integrity checks. |
-| 6. Maintenance | Continuous Monitoring via Windows Event Viewer and automated patch management. |
+### Security Logic: What these controls protect against
+
+**1. The "Security Guard at the Exit" (Data Theft / Egress Filtering)**
+* **Non-Technical:** Like a bank guard checking every bag at the exit; if you don't have an "Authorized to Carry" badge, you can’t leave.
+* **Technical:** This is Egress Filtering. By controlling outbound traffic, we stop Data Exfiltration. Even if malware bypasses entry, it cannot "phone home" to an attacker’s server.
+
+**2. The "Approved Employee List" (Imposter Employee / Binary Whitelisting)**
+* **Non-Technical:** The building manager only lets 5 specific employees use the office phone. If your name isn't on the list, you can't call out.
+* **Technical:** This is Application-Level Micro-segmentation. It stops "Living-off-the-Land" (LotL) attacks where hackers use built-in tools like PowerShell to reach the web.
+
+**3. The "Firewalled Rooms" (Spread of Fire / Lateral Movement)**
+* **Non-Technical:** In a hotel, if a fire starts in the kitchen, steel doors slam shut to keep smoke from reaching guest rooms.
+* **Technical:** This is Host-Based Micro-segmentation. It prevents Lateral Movement. If one application is hacked, the attacker is "trapped" and cannot probe other devices.
+
+**4. The "Broken Remote Control" (Backdoor Entry / Reverse Shell)**
+* **Non-Technical:** A thief sneaks in and tries to use a remote to open the garage, but you’ve removed the batteries. He’s stuck inside and can't coordinate with his team.
+* **Technical:** This prevents Reverse Shells. Blocking unauthorized binaries from initiating external connections kills this "inside-out" connection.
+
+### Critical Blind Spots: What Windows Firewall Cannot Do
+As a SOC Analyst, it is vital to understand where a tool's power ends:
+* **Lack of Deep Packet Inspection (DPI):** It looks at the envelope (IP/Port) but not inside.
+* **Evasion via Process Injection:** Malware hijacks a "good" process (like explorer.exe) already allowed online.
+* **Administrative Bypass:** An attacker with Local Admin rights can simply disable the firewall.
 
 </details>
 
 ---
 
-### Demonstrated Scenarios & Technical Validations
-These scenarios represent the "Proof of Work" for SOC and IAM roles.
-
-* Authentication & Brute-Force Monitoring: Audited 1,000+ security events (Event IDs 4624/4625) to distinguish between authorized behavior and potential IOCs.
-* IAM Privilege Escalation Detection: Validated enforcement of Principle of Least Privilege (PoLP). Confirmed via Event IDs 4672/4688 that Standard User accounts triggered "Access Denied" for unauthorized software installs.
-* VPN Kill-Switch Leak Testing: Performed a "Hard Drop" test by disabling the physical network interface; verified via CMD ("General failure") the immediate termination of all outbound traffic (ICMP/HTTP).
-* Egress Intelligence & C2 Mitigation: Integrated NextDNS Threat Intelligence to simulate connections to malicious domains. Verified 100% block rate for Command & Control (C2) callbacks.
-* Behavioral Detection (Sysmon): Implemented Sysmon to capture advanced telemetry (Event ID 3), detecting "Living-off-the-Land" (LotL) techniques hidden in trusted processes.
-* Data Resiliency (3-2-1-1-0): Engineered a professional data framework. Demonstrated an RTO of <15 minutes through restoration drills of "Thoriso_critical_files.zip".
-
-
-
----
-
-### Phase 4: Validation & SOC Operations
-This section confirms the live operational status of the virtualization lab.
-
-#### Virtualization Deployment (The Technical Sandbox)
-* Hypervisor Integration: Successfully deployed a multi-node environment on the Ryzen platform.
-* Node 1 (Kali Linux): Offensive node for internal vulnerability assessments.
-* Node 2 (Ubuntu Desktop): Infrastructure node for mastering Linux SysAdmin (Fintech-specific).
-* Node 3 (Windows 10 Hardened): Primary target for GPO enforcement and auditing.
-* Network Segmentation: Isolated lab environment via Virtual NAT/Host-Only adapters to prevent production cross-contamination.
-
-#### SOC Auditing & Maintenance
-* Configuration Drift: Weekly manual audits of local security policies.
-* Patch Compliance: 100% remediation rate for critical OS vulnerabilities within 48 hours.
-* Change Control: All system modifications are documented in this repository as a permanent audit trail.
-
----
-
-### Technical Manifest: 18-Step Roadmap
-This section contains the deep-dive technical heart of the project.
+## Technical Manifest: 18-Step Roadmap
 
 <details>
-<summary><b>Click to Expand: Full 18-Step Implementation Details</b></summary>
+<summary><b>Click to Expand: Phase 1 & 2 (Architecture & Systems Integration)</b></summary>
 
-#### Phase 1: Architecture & Asset Management
+### Phase 1: Architecture & Asset Management (FIS Standards)
 1. Project Initiation: Final system integration of the MSI workstation.
 2. Requirements Analysis: Comparative analysis of Celeron vs. Ryzen architectures.
-3. Asset Management: Inventory tracking (NIST 800-53 standard).
-4. Logical Design: Cisco Packet Tracer diagramming (Latency: <1ms local).
+3. Hardware Asset Management: Structured inventory tracking (NIST 800-53 standard).
+4. Logical Network Design: Cisco Packet Tracer diagramming (Latency: <1ms local).
 
-#### Phase 2: Physical & Systems Integration
-5. Layer 1 Infrastructure: Cat6 Ethernet deployment.
-6. Firmware Hardening: TPM 2.0 & UEFI Secure Boot activation.
-7. Hardware Validation: 12-hour stress test (Zero POST/Memory faults).
-8. Electrical Hardening: MOV suppression via external Surge Protection.
+### Phase 2: Physical & Systems Integration
+5. Layer 1 Infrastructure: Deployment of physical Cat6 Ethernet.
+6. Firmware Hardening: Establishing Hardware Root of Trust via TPM 2.0 and UEFI Secure Boot.
+7. Hardware Validation: Sustained CPU temp under load: 65–72°C. Zero POST/memory faults.
+8. Electrical Hardening: Implemented external Surge Safe Power Protection.
+![Image 4: Physical PC Interior/Cabling]
+![Image 5: BIOS Screen showing TPM 2.0 & Secure Boot ENABLED]
 
-#### Phase 3: Implementation & Security Hardening
-9. Hardened OS Deployment: Secure Windows Pro installation.
-10. Network Configuration: ICMP connectivity verification.
-11. Fail-Secure Connectivity: Proton VPN Permanent Kill-Switch implementation.
-12. DNS Anti-Spoofing: Enforced Encrypted DNS to mitigate MITM attacks.
-13. Gateway-Level Security: Edge URL Filtering via Rain Web Gateway.
-14. Host-Based Defense: Custom Outbound Firewall Rules for Micro-segmentation.
-    * Analogy: The "Security Guard at the Exit" (Egress Filtering).
-    * Analogy: The "Approved Employee List" (Binary Whitelisting).
-15. Critical Blind Spot Analysis: Documented limitations of Stateful Firewalls (Lack of DPI).
+</details>
 
-#### Phase 4: Advanced Behavioral Layers
-16. NextDNS C2 Filtering: Real-time blocking of "Bad Neighborhoods" and NRDs.
-17. Sysmon Integration: Behavioral logging for stealthy movement detection.
-18. Nessus Vulnerability Assessment: Periodic credentialed scanning for unpatched risk.
+<details>
+<summary><b>Click to Expand: Phase 3 (Implementation & Hardening)</b></summary>
+
+9. Hardened OS Deployment.
+10. Network Configuration (ICMP verification).
+11. Fail-Secure Connectivity (VPN Kill-Switch).
+12. DNS Anti-Spoofing & Integrity: Enforced Private Encrypted DNS via VPN.
+13. Gateway-Level Security (Rain Router): Edge URL Filtering.
+14. Host-Based Defense: Custom Windows Firewall Outbound Rules.
+15. Layer 2 DNS-Layer Defense: Integrated NextDNS for C2 Threat Intelligence, Newly Registered Domain (NRD) blocking, and DGA protection.
+![Image 11: NextDNS Analytics - Blocking C2 and NRD attempts]
+16. Layer 3 Behavioral Monitoring: Sysmon integration for Process Injection detection.
+![Image 12: Sysmon Event ID 3 - Capturing unauthorized network connection attempt]
+17. Vulnerability Assessment: Nessus Essentials scans to find unpatched software.
+![Image 13: Nessus Scan Results - Clean Baseline]
 
 </details>
 
 ---
 
-### Skills Gained & Target Roles
-* SOC Monitoring: Event Analysis, IOC detection, and Baseline Establishment.
-* Vulnerability Management: Patching, CVE tracking, and CIS Benchmarks.
-* IAM Specialist: PoLP enforcement, UAC auditing, and Identity Segmentation.
-* Infrastructure Engineering: Hypervisor management, 3-2-1-1-0 Resilience, and HW Root of Trust.
+## Phase 4: Validation & SOC Operations
 
-Target Roles: Junior SOC Analyst, IAM Analyst, Junior Security Engineer, IT Systems Administrator (Fintech).
+### Virtualization Deployment (The Technical Sandbox)
+* **Hypervisor Integration:** Successfully deployed multi-node environment on Ryzen 6C/12T platform.
+* **Multi-OS Provisioning:**
+    * **Node 1 (Kali Linux):** Offensive node for internal assessments.
+    * **Node 2 (Ubuntu Desktop/Server):** Linux admin and syslog monitoring (Fintech-targeted).
+    * **Node 3 (Windows 10 Hardened):** Target for security control validation and GPO.
+* **Resource Management:** Optimized allocation for concurrent operation.
+* **Network Segmentation:** Isolated via Virtual NAT/Host-Only adapters.
+
+### SOC Auditing & Incident Monitoring
+* established monitoring baseline; total security events reviewed: 1,000+.
+* Key Event IDs: 4624, 4625, 4672, 4688, 4673/4674.
+* **Continuous Maintenance:** Patch Compliance (100% remediation within 48h) and weekly policy audits.
+
+### Data Resiliency (3-2-1-1-0 Framework)
+* **3 Copies:** Original + 2 backups.
+* **2 Media Types:** Internal HDD + External USB (Air-Gap).
+* **1 Offsite:** Secure Cloud replicate.
+* **1 Immutable:** "Locked" WORM copy.
+* **0 Errors:** Restoration drills proving RTO < 15 minutes.
 
 ---
 
-### Visual Evidence Gallery
-* Image 1: Celeron vs. Ryzen Build Collage
-* Image 9: VPN "Hard-Drop" General Failure Result
-* Image 10: Multi-Node Lab Orchestration - VMware showing Kali, Ubuntu, and Windows 10 Nodes
-* Image 13: Nessus Scan Clean Baseline Report
+## Skills Gained & Target Roles
+* SOC Monitoring & Log Analysis (Event IDs, Sysmon)
+* Vulnerability Management (Nessus, Patch Verification)
+* IAM (Principle of Least Privilege, Admin/Standard segmentation)
+* Endpoint Hardening (TPM, BitLocker, Egress Filtering)
+
+**Target Roles:** Junior SOC Analyst, Vulnerability Management Analyst, IAM Analyst, Junior Security Engineer.
 
 ---
-End of Documentation
+**Visual Evidence Finalized**
+![Image 9: Final Engineering Station and Windows Event Viewer Security Logs]
+![Image 10: Multi-Node Lab Orchestration - VMware showing Kali, Ubuntu, and Windows 10 Nodes]
+
+

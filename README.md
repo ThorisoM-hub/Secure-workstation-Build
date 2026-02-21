@@ -32,39 +32,23 @@ This project documents the end-to-end security hardening and deployment of a per
 ## Demonstrated Scenarios & Technical Validations
 
 <details>
-<summary><b>Click to Expand: Detailed Scenarios & Testing Evidence</b></summary>
+<summary><b>Click to Expand: Summary of Technical Testing & Evidence</b></summary>
 
-**Authentication failure & brute-force simulations:** events logged and reviewed in Windows Event Viewer to validate detection and response. This includes establishing a rigorous monitoring baseline by auditing Event IDs 4624 (Success) and 4625 (Failure), reviewing a total volume of 1,000+ security events to distinguish between authorized behavior and potential Indicators of Compromise (IOCs).
-
-**Privilege escalation detection via Windows security logs:** including blocked Standard User actions and Admin special privileges, demonstrating effective enforcement of the Principle of Least Privilege (PoLP). Validation was confirmed via Event IDs 4672, 4688, and 4673/4674, specifically verifying that Standard User accounts triggered "Access Denied" logs during unauthorized software installation attempts.
-![Image 8: IAM Setup - Admin vs. Standard User account segmentation]
-
-**VPN kill-switch leak testing:** to ensure secure connectivity and prevent data leaks during network interruptions. Performed a "Hard Drop" test by disabling the physical network interface; verified via Command Prompt ("General failure" results) the immediate termination of all outbound traffic (ICMP/HTTP) to prevent clear-text data leakage outside the encrypted tunnel.
-![Image 9: Windows Command Prompt showing "General failure" during VPN Hard-Drop test]
-
-**Vulnerability patch verification & configuration drift checks:** including CIS benchmark audits and remediation of misconfigurations, demonstrating continuous system security monitoring. This process adhered to the Maintenance phase of the SDLC, maintaining a 100% remediation rate for critical OS vulnerabilities by verifying all Security Intelligence Updates within 48 hours of release.
-
-**Data Loss Prevention (DLP):** enforced network-level and endpoint DLP controls through VPN kill-switch testing, full-disk encryption (BitLocker, TPM-bound), and restricted user privileges to prevent unauthorized data exfiltration. This was further strengthened by implementing custom Outbound Traffic Rules in Windows Defender Firewall and Gateway-level URL Filtering (Rain Web Gateway) to simulate anti-exfiltration controls.
-![Image 10: Windows Firewall - Custom Outbound Rules for Micro-segmentation]
-
-**Architecture & Integrity Validation:** verified system vitals under high virtualization load (sustained CPU temp: 65–72°C) and established a Hardware Root of Trust via TPM 2.0 and UEFI Secure Boot. Utilized Cisco Packet Tracer to validate the logical network path, ensuring <1ms local latency and 0 packet loss across the Layer 1 Cat6 infrastructure.
-
-**Data Resiliency Execution:** engineered and validated a professional 3-2-1-1-0 Data Resiliency Framework for critical project files. Demonstrated high availability and business continuity through restoration drills proving a Recovery Time Objective (RTO) of <15 minutes.
-
-**Egress Intelligence & C2 Mitigation Testing:** validated the integration of NextDNS Threat Intelligence by simulating connections to known malicious domains and Newly Registered Domains (NRDs). Verified 100% block rate for Command & Control (C2) callbacks from authorized binaries, effectively closing the "Domain Fronting" loophole.
-![Image 11: NextDNS Analytics - Blocking C2 and NRD attempts]
-
-**Behavioral Detection & Process Monitoring:** implemented Sysmon (System Monitor) to capture advanced telemetry beyond standard Windows logging. Validated detection of "Living-off-the-Land" (LotL) techniques and potential process injection, ensuring visibility into malicious activity hidden within trusted system processes.
-![Image 12: Sysmon Event ID 3 - Capturing unauthorized network connection attempt]
-
-**Proactive Vulnerability Assessment:** executed credentialed vulnerability scans using Nessus Essentials/OpenVAS to identify unpatched software and configuration weaknesses. Successfully utilized Windows Firewall outbound rules as a "Compensating Control" to neutralize identified risks before official patches were deployed.
-![Image 13: Nessus Scan Results - Clean Baseline & Remediation Report]
+* **Brute-Force & Auth Monitoring:** Audited **1,000+ security events** via **Event IDs 4624 (Success) and 4625 (Failure)** to establish a behavioral baseline and identify potential IOCs.
+* **Privilege Escalation & IAM:** Enforced **PoLP** by validating blocked actions via **Event IDs 4672, 4688, and 4673/4674**; verified Standard User "Access Denied" logs during unauthorized install attempts. ![Image 8: IAM Setup - Admin vs. Standard User account segmentation]
+* **VPN Kill-Switch (DLP):** Conducted "Hard Drop" testing by disabling physical interfaces; verified **0 clear-text leakage** via Command Prompt "General failure" results. ![Image 9: Windows Command Prompt showing "General failure" during VPN Hard-Drop test]
+* **Vulnerability Management:** Maintained a **100% remediation rate** for critical vulnerabilities; verified all Security Intelligence Updates within **48 hours** of release per CIS benchmarks.
+* **Network Micro-segmentation:** Implemented **outbound firewall rules** and Rain Web Gateway URL filtering to block unauthorized binary exfiltration. ![Image 10: Windows Firewall - Custom Outbound Rules for Micro-segmentation]
+* **Hardware Integrity:** Validated system stability under high load (sustained **65–72°C**) and established **Hardware Root of Trust** via TPM 2.0 and UEFI Secure Boot.
+* **Network Performance:** Validated logical paths via Cisco Packet Tracer, ensuring **<1ms local latency** and **0% packet loss** over Cat6.
+* **Data Resiliency:** Applied **3-2-1-1-0 framework**; confirmed business continuity via restoration drills proving an **RTO of <15 minutes**.
+* **Egress Intelligence:** Achieved **100% block rate** for Command & Control (C2) callbacks and Newly Registered Domains (NRDs) using NextDNS. ![Image 11: NextDNS Analytics - Blocking C2 and NRD attempts]
+* **Advanced Telemetry:** Deployed **Sysmon** to detect "Living-off-the-Land" (LotL) techniques and process injection (Event ID 3) that bypass standard logging. ![Image 12: Sysmon Event ID 3 - Capturing unauthorized network connection attempt]
+* **Proactive Defense:** Performed credentialed **Nessus/OpenVAS scans**; utilized Firewall outbound rules as "Compensating Controls" for unpatched vulnerabilities. ![Image 13: Nessus Scan Results - Clean Baseline & Remediation Report]
 
 </details>
 
----
 
-<a name="architecture-summary"></a>
 ## Architecture Summary
 
 | Component | Implementation |

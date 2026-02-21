@@ -96,23 +96,37 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 **Host-Based Defense (Windows Firewall):** Implemented custom Outbound Traffic Rules within Windows Defender Firewall with Advanced Security. Implemented micro-segmentation by blocking specific non-authorized binaries from initiating external connections, simulating anti-exfiltration controls.
 
 ### Security Logic: What these controls protect against
-This defensive setup transitions the workstation to a **"Zero Trust"** posture by controlling not just who enters, but what is allowed to leave. Below is the breakdown of the specific threats neutralized by these firewall rules:
+<ul>
+This defensive setup transitions the workstation to a <strong>"Zero Trust"</strong> posture by controlling not just who enters, but what is allowed to leave. Below is the breakdown of the specific threats neutralized by these firewall rules:
 
-**1. The "Security Guard at the Exit" (Data Theft / Egress Filtering)**
-* **Non-Technical:** Like a bank guard checking every bag at the exit; if you don't have an "Authorized to Carry" badge, you can’t leave with anything.
-* **Technical:** This is **Egress Filtering**. By controlling outbound traffic, we stop **Data Exfiltration**. Even if malware bypasses initial entry, it cannot "phone home" to an attacker’s server to send stolen passwords or files.
+<li><strong>1. The "Security Guard at the Exit" (Data Theft / Egress Filtering)</strong>
+    <ul>
+    <li><strong>Non-Technical:</strong> Like a bank guard checking every bag at the exit; if you don't have an "Authorized to Carry" badge, you can’t leave with anything.</li>
+    <li><strong>Technical:</strong> This is <strong>Egress Filtering</strong>. By controlling outbound traffic, we stop <strong>Data Exfiltration</strong>. Even if malware bypasses initial entry, it cannot "phone home" to an attacker’s server to send stolen passwords or files.</li>
+    </ul>
+</li>
 
-**2. The "Approved Employee List" (Imposter Employee / Binary Whitelisting)**
-* **Non-Technical:** The building manager only lets 5 specific employees use the office phone. If your name isn't on the list, you can't call out.
-* **Technical:** This is **Application-Level Micro-segmentation**. It shifts from "Blacklisting" (blocking known bad apps) to **"Whitelisting"** (only allowing authorized binaries). This stops **"Living-off-the-Land" (LotL)** attacks where hackers try to use built-in Windows tools like PowerShell to reach the web.
+<li><strong>2. The "Approved Employee List" (Imposter Employee / Binary Whitelisting)</strong>
+    <ul>
+    <li><strong>Non-Technical:</strong> The building manager only lets 5 specific employees use the office phone. If your name isn't on the list, you can't call out.</li>
+    <li><strong>Technical:</strong> This is <strong>Application-Level Micro-segmentation</strong>. It shifts from "Blacklisting" (blocking known bad apps) to <strong>"Whitelisting"</strong> (only allowing authorized binaries). This stops <strong>"Living-off-the-Land" (LotL)</strong> attacks where hackers try to use built-in Windows tools like PowerShell to reach the web.</li>
+    </ul>
+</li>
 
-**3. The "Firewalled Rooms" (Spread of Fire / Lateral Movement)**
-* **Non-Technical:** In a hotel, if a fire starts in the kitchen, steel doors slam shut to keep the smoke from reaching guest rooms.
-* **Technical:** This is **Host-Based Micro-segmentation**. It prevents **Lateral Movement**. If one application is hacked, the attacker is "trapped" in that process and cannot probe or attack other devices on your local network.
+<li><strong>3. The "Firewalled Rooms" (Spread of Fire / Lateral Movement)</strong>
+    <ul>
+    <li><strong>Non-Technical:</strong> In a hotel, if a fire starts in the kitchen, steel doors slam shut to keep the smoke from reaching guest rooms.</li>
+    <li><strong>Technical:</strong> This is <strong>Host-Based Micro-segmentation</strong>. It prevents <strong>Lateral Movement</strong>. If one application is hacked, the attacker is "trapped" in that process and cannot probe or attack other devices on your local network.</li>
+    </ul>
+</li>
 
-**4. The "Broken Remote Control" (Backdoor Entry / Reverse Shell)**
-* **Non-Technical:** A thief sneaks in and tries to use a remote to open the garage for his friends, but you’ve removed the batteries. He’s stuck inside and can't coordinate with his team.
-* **Technical:** This prevents **Reverse Shells**. Attackers often run a script that "reaches out" to their computer to give them full remote control. Blocking unauthorized binaries from initiating external connections kills this "inside-out" connection.
+<li><strong>4. The "Broken Remote Control" (Backdoor Entry / Reverse Shell)</strong>
+    <ul>
+    <li><strong>Non-Technical:</strong> A thief sneaks in and tries to use a remote to open the garage for his friends, but you’ve removed the batteries. He’s stuck inside and can't coordinate with his team.</li>
+    <li><strong>Technical:</strong> This prevents <strong>Reverse Shells</strong>. Attackers often run a script that "reaches out" to their computer to give them full remote control. Blocking unauthorized binaries from initiating external connections kills this "inside-out" connection.</li>
+    </ul>
+</li>
+</ul>
 
 ### Critical Blind Spots: What Windows Firewall Cannot Do
 As a SOC Analyst, it is vital to understand where a tool's power ends. While Windows Firewall is powerful, it has "invisible" gaps:
@@ -125,24 +139,43 @@ As a SOC Analyst, it is vital to understand where a tool's power ends. While Win
 **Tooling:** **NextDNS** (Cloud-Based Intelligence Layer)
 Since Windows Firewall handles the **"What"** (the program), NextDNS was implemented to handle the **"Where"** (the destination), acting as the "Intelligence Agency" for the workstation.
 
-* **C2 Threat Intelligence (The "Bad Neighborhood" Filter):**
-    * **Non-Technical:** Like an intelligence agency providing a list of "Scam Phone Numbers." Even if an employee is allowed to use the phone, the call is blocked if they try to dial a known scammer.
-    * **Technical:** NextDNS maintains a massive, real-time list of **Command & Control (C2)** "Bad Neighborhoods." If any app tries to connect to a domain used for hacking, NextDNS kills the connection before it starts.
-* **Newly Registered Domain (NRD) Blocking:**
-    * **Non-Technical:** Blocking all calls from phone numbers created in the last 24 hours. Legitimate businesses don't change their numbers every day; scammers do.
-    * **Technical:** A proactive **Vulnerability Management** control. By blocking any domain created in the last 30 days, I neutralized the "disposable" infrastructure hackers use for one-time phishing attacks.
-* **DGA (Domain Generation Algorithm) Protection:**
-    * **Non-Technical:** Spotting "gibberish" or "coded" language. If someone tries to call a number that looks like random noise (e.g., `xhz123.net`), the system recognizes it as a machine-generated trap.
-    * **Technical:** Malware uses math to create 1,000 random names a day. NextDNS uses AI to recognize these "gibberish" names and blocks them automatically.
-* **Anti-Stealth Toggles:** Enabled protection against **DNS Rebinding** and **Cryptojacking**, stopping browser-based resource theft that typically bypasses standard firewalls.
+<ul>
+<li><strong>C2 Threat Intelligence (The "Bad Neighborhood" Filter):</strong>
+    <ul>
+    <li><strong>Non-Technical:</strong> Like an intelligence agency providing a list of "Scam Phone Numbers." Even if an employee is allowed to use the phone, the call is blocked if they try to dial a known scammer.</li>
+    <li><strong>Technical:</strong> NextDNS maintains a massive, real-time list of <strong>Command & Control (C2)</strong> "Bad Neighborhoods." If any app tries to connect to a domain used for hacking, NextDNS kills the connection before it starts.</li>
+    </ul>
+</li>
+<li><strong>Newly Registered Domain (NRD) Blocking:</strong>
+    <ul>
+    <li><strong>Non-Technical:</strong> Blocking all calls from phone numbers created in the last 24 hours. Legitimate businesses don't change their numbers every day; scammers do.</li>
+    <li><strong>Technical:</strong> A proactive <strong>Vulnerability Management</strong> control. By blocking any domain created in the last 30 days, I neutralized the "disposable" infrastructure hackers use for one-time phishing attacks.</li>
+    </ul>
+</li>
+<li><strong>DGA (Domain Generation Algorithm) Protection:</strong>
+    <ul>
+    <li><strong>Non-Technical:</strong> Spotting "gibberish" or "coded" language. If someone tries to call a number that looks like random noise (e.g., <code>xhz123.net</code>), the system recognizes it as a machine-generated trap.</li>
+    <li><strong>Technical:</strong> Malware uses math to create 1,000 random names a day. NextDNS uses AI to recognize these "gibberish" names and blocks them automatically.</li>
+    </ul>
+</li>
+<li><strong>Anti-Stealth Toggles:</strong> Enabled protection against <strong>DNS Rebinding</strong> and <strong>Cryptojacking</strong>, stopping browser-based resource theft that typically bypasses standard firewalls.</li>
+</ul>
 
 ### Layer 3: Behavioral Monitoring & Vulnerability Assessment
-* **Behavioral Logging (Sysmon):**
-    * **Non-Technical:** Like a security camera inside the office. The firewall stops people at the door, but Sysmon records if an employee starts acting strangely once they are inside.
-    * **Technical:** It logs **Process Injection** and lateral movement, providing the visibility needed for a SOC Analyst to detect stealthy movement that the firewall trusts.
-* **Vulnerability Assessment (Nessus Essentials/OpenVAS):**
-    * **Non-Technical:** A "Home Inspection" for digital locks. It searches for windows left unlocked so they can be fixed before a thief finds them.
-    * **Technical:** Implemented periodic scanning to find unpatched software. This allows for **Compensating Controls**—blocking specific binaries in the firewall until a patch is available.
+<ul>
+<li><strong>Behavioral Logging (Sysmon):</strong>
+    <ul>
+    <li><strong>Non-Technical:</strong> Like a security camera inside the office. The firewall stops people at the door, but Sysmon records if an employee starts acting strangely once they are inside.</li>
+    <li><strong>Technical:</strong> It logs <strong>Process Injection</strong> and lateral movement, providing the visibility needed for a SOC Analyst to detect stealthy movement that the firewall trusts.</li>
+    </ul>
+</li>
+<li><strong>Vulnerability Assessment (Nessus Essentials/OpenVAS):</strong>
+    <ul>
+    <li><strong>Non-Technical:</strong> A "Home Inspection" for digital locks. It searches for windows left unlocked so they can be fixed before a thief finds them.</li>
+    <li><strong>Technical:</strong> Implemented periodic scanning to find unpatched software. This allows for <strong>Compensating Controls</strong>—blocking specific binaries in the firewall until a patch is available.</li>
+    </ul>
+</li>
+</ul>
 
 ### Defense-in-Depth: Solving the Loopholes
 The following table illustrates how the secondary layers (NextDNS, Sysmon, Nessus) solve the specific problems that Windows Firewall cannot address alone.
@@ -172,7 +205,6 @@ The following table illustrates how the secondary layers (NextDNS, Sysmon, Nessu
     * **Validation Action – Unauthorized Software Installation Test:**
         Simulated an unauthorized software installation from a Standard User account to validate enforcement of the Principle of Least Privilege. The installation was blocked by UAC/admin controls (logged in Event Viewer: Event ID 4624 (Logon), Event ID 4625 (Failed Logon), Event ID 4672 (Special Privileges), Event ID 4688 (Process Creation), and Event IDs 4673 / 4674 (Sensitive Privilege Use / Privilege Object Access Denied)), confirming effective separation between Admin and Standard user privileges.
         While logged in as an Admin account, I performed a system shutdown (Event ID 4672 – Special Privileges), which completed successfully, demonstrating that Admin accounts can perform elevated tasks while Standard users cannot.
-
 
 * **Data-at-Rest Encryption:** Full-disk encryption via BitLocker, anchored to hardware TPM.
 * **Data Protection: Backup & Storage Solutions (The "Digital Safety Net"):**

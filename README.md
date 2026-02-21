@@ -1,4 +1,6 @@
+
 # Secure Workstation Build & Hardened Infrastructure Project
+
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Architecture & Hardware](#architecture--hardware)
@@ -23,53 +25,91 @@ This project documents the end-to-end security hardening and deployment of a per
 * Capacity increased from 1–2 limited VMs to 3–5 stable VMs simultaneously
 
 [Watch the Technical Execution Video on YouTube]
-Chapters: Architecture, Firmware Hardening, OS Security, VPN Data Leak Prevention (DLP), and VM & configuration drift checks, including CIS benchmark audits and remediation of misconfigurations.
+*Chapters: Architecture, Firmware Hardening, OS Security, VPN Data Leak Prevention (DLP), and VM & configuration drift checks, including CIS benchmark audits and remediation of misconfigurations.*
 
 ---
 
 ## Demonstrated Scenarios & Technical Validations
 
-### Authentication & Privilege Auditing
-* **Brute-force simulations:** Events logged and reviewed in Windows Event Viewer. Established a rigorous monitoring baseline by auditing Event IDs 4624 (Success) and 4625 (Failure), reviewing a volume of 1,000+ security events to distinguish authorized behavior from potential IOCs.
-* **Privilege escalation detection:** Validated enforcement of the Principle of Least Privilege (PoLP). Confirmed via Event IDs 4672, 4688, and 4673/4674 that Standard User accounts triggered "Access Denied" logs during unauthorized installation attempts.
+<details>
+<summary><b>Click to Expand: Authentication & Privilege Auditing (IAM)</b></summary>
+
+* **Authentication failure & brute-force simulations:** Events logged and reviewed in Windows Event Viewer to validate detection and response. This includes establishing a rigorous monitoring baseline by auditing Event IDs 4624 (Success) and 4625 (Failure), reviewing a total volume of 1,000+ security events to distinguish between authorized behavior and potential Indicators of Compromise (IOCs).
+* **Privilege escalation detection via Windows security logs:** Including blocked Standard User actions and Admin special privileges, demonstrating effective enforcement of the Principle of Least Privilege (PoLP). Validation was confirmed via Event IDs 4672, 4688, and 4673/4674, specifically verifying that Standard User accounts triggered "Access Denied" logs during unauthorized software installation attempts.
 
 ![Image 8: IAM Setup - Admin vs. Standard User account segmentation]
 
-### Network & Data Leak Prevention (DLP)
-* **VPN kill-switch leak testing:** Performed a "Hard Drop" test by disabling the physical network interface; verified via Command Prompt ("General failure" results) the immediate termination of all outbound traffic (ICMP/HTTP) to prevent clear-text leakage.
+</details>
+
+<details>
+<summary><b>Click to Expand: Network Security & VPN Leak Prevention (DLP)</b></summary>
+
+* **VPN kill-switch leak testing:** Performed a "Hard Drop" test by disabling the physical network interface; verified via Command Prompt ("General failure" results) the immediate termination of all outbound traffic (ICMP/HTTP) to prevent clear-text data leakage outside the encrypted tunnel.
 ![Image 9: Windows Command Prompt showing "General failure" during VPN Hard-Drop test]
 
-* **Host-Based Defense (Windows Firewall):** Implemented custom Outbound Traffic Rules. 
+* **Data Loss Prevention (DLP):** Enforced network-level and endpoint DLP controls through VPN kill-switch testing, full-disk encryption (BitLocker, TPM-bound), and restricted user privileges. This was further strengthened by implementing custom Outbound Traffic Rules in Windows Defender Firewall and Gateway-level URL Filtering (Rain Web Gateway) to simulate anti-exfiltration controls.
 ![Image 10: Windows Firewall - Custom Outbound Rules for Micro-segmentation]
+
+</details>
+
+<details>
+<summary><b>Click to Expand: Egress Filtering & C2 Mitigation Testing</b></summary>
+
+* **Egress Intelligence & C2 Mitigation Testing:** Validated the integration of NextDNS Threat Intelligence by simulating connections to known malicious domains and Newly Registered Domains (NRDs). Verified 100% block rate for Command & Control (C2) callbacks from authorized binaries, effectively closing the "Domain Fronting" loophole.
+![Image 11: NextDNS Analytics - Blocking C2 and NRD attempts]
+
+* **Behavioral Detection & Process Monitoring:** Implemented Sysmon (System Monitor) to capture advanced telemetry beyond standard Windows logging. Validated detection of "Living-off-the-Land" (LotL) techniques and potential process injection, ensuring visibility into malicious activity hidden within trusted system processes.
+![Image 12: Sysmon Event ID 3 - Capturing unauthorized network connection attempt]
+
+* **Proactive Vulnerability Assessment:** Executed credentialed vulnerability scans using Nessus Essentials/OpenVAS to identify unpatched software and configuration weaknesses. Successfully utilized Windows Firewall outbound rules as a "Compensating Control" to neutralize identified risks before official patches were deployed.
+![Image 13: Nessus Scan Results - Clean Baseline & Remediation Report]
+
+</details>
 
 ---
 
+## Security Logic: Why These Controls Matter
+
 <details>
-<summary><b>Click to Expand: Security Logic & Defensive Analogies</b></summary>
+<summary><b>Click to Expand: The Defensive Analogies (Non-Technical vs Technical)</b></summary>
 
-### Security Logic: What these controls protect against
+### 1. The "Security Guard at the Exit" (Data Theft / Egress Filtering)
+* **Non-Technical:** Like a bank guard checking every bag at the exit; if you don't have an "Authorized to Carry" badge, you can’t leave with anything.
+* **Technical:** This is Egress Filtering. By controlling outbound traffic, we stop Data Exfiltration. Even if malware bypasses initial entry, it cannot "phone home" to an attacker’s server to send stolen passwords or files.
 
-**1. The "Security Guard at the Exit" (Data Theft / Egress Filtering)**
-* **Non-Technical:** Like a bank guard checking every bag at the exit; if you don't have an "Authorized to Carry" badge, you can’t leave.
-* **Technical:** This is Egress Filtering. By controlling outbound traffic, we stop Data Exfiltration. Even if malware bypasses entry, it cannot "phone home" to an attacker’s server.
-
-**2. The "Approved Employee List" (Imposter Employee / Binary Whitelisting)**
+### 2. The "Approved Employee List" (Imposter Employee / Binary Whitelisting)
 * **Non-Technical:** The building manager only lets 5 specific employees use the office phone. If your name isn't on the list, you can't call out.
-* **Technical:** This is Application-Level Micro-segmentation. It stops "Living-off-the-Land" (LotL) attacks where hackers use built-in tools like PowerShell to reach the web.
+* **Technical:** This is Application-Level Micro-segmentation. It shifts from "Blacklisting" (blocking known bad apps) to "Whitelisting" (only allowing authorized binaries). This stops "Living-off-the-Land" (LotL) attacks where hackers try to use built-in Windows tools like PowerShell to reach the web.
 
-**3. The "Firewalled Rooms" (Spread of Fire / Lateral Movement)**
-* **Non-Technical:** In a hotel, if a fire starts in the kitchen, steel doors slam shut to keep smoke from reaching guest rooms.
-* **Technical:** This is Host-Based Micro-segmentation. It prevents Lateral Movement. If one application is hacked, the attacker is "trapped" and cannot probe other devices.
+### 3. The "Firewalled Rooms" (Spread of Fire / Lateral Movement)
+* **Non-Technical:** In a hotel, if a fire starts in the kitchen, steel doors slam shut to keep the smoke from reaching guest rooms.
+* **Technical:** This is Host-Based Micro-segmentation. It prevents Lateral Movement. If one application is hacked, the attacker is "trapped" in that process and cannot probe or attack other devices on your local network.
 
-**4. The "Broken Remote Control" (Backdoor Entry / Reverse Shell)**
-* **Non-Technical:** A thief sneaks in and tries to use a remote to open the garage, but you’ve removed the batteries. He’s stuck inside and can't coordinate with his team.
-* **Technical:** This prevents Reverse Shells. Blocking unauthorized binaries from initiating external connections kills this "inside-out" connection.
+### 4. The "Broken Remote Control" (Backdoor Entry / Reverse Shell)
+* **Non-Technical:** A thief sneaks in and tries to use a remote to open the garage for his friends, but you’ve removed the batteries. He’s stuck inside and can't coordinate with his team.
+* **Technical:** This prevents Reverse Shells. Attackers often run a script that "reaches out" to their computer to give them full remote control. Blocking unauthorized binaries from initiating external connections kills this "inside-out" connection.
 
-### Critical Blind Spots: What Windows Firewall Cannot Do
-As a SOC Analyst, it is vital to understand where a tool's power ends:
-* **Lack of Deep Packet Inspection (DPI):** It looks at the envelope (IP/Port) but not inside.
-* **Evasion via Process Injection:** Malware hijacks a "good" process (like explorer.exe) already allowed online.
-* **Administrative Bypass:** An attacker with Local Admin rights can simply disable the firewall.
+</details>
+
+---
+
+## SDLC Methodology (Project Lifecycle)
+
+<details>
+<summary><b>Click to Expand: FIS Standards & SDLC Phase Mapping</b></summary>
+
+Drawing from my Financial Information Systems (FIS) qualification, I applied the Systems Development Life Cycle (SDLC) to manage the project flow from concept to completion. 
+
+| SDLC Phase | Technical Project Application |
+| :--- | :--- |
+| 1. Planning | Defined project scope to support high-density virtualization; set requirements for 6C/12T architecture and 16GB DDR4 RAM. |
+| 2. Analysis | Conducted hardware gap analysis; identified that legacy Celeron architecture lacked SLAT/VT-x support (NPT/AMD-V). |
+| 3. Design | Developed logical system architecture; utilized Cisco Packet Tracer to map the connection between the Rain Router and host via Cat6. |
+| 4. Implementation | Managed physical component assembly and Thermal Management; executed OS deployment and established Layer 1 physical link. |
+| 5. Testing | Performed Verification & Validation (V&V); conducted Hardware stress-testing (POST/MemTest86) and validated TPM 2.0/UEFI integrity. |
+| 6. Maintenance | Established Continuous Monitoring via Windows Event Viewer (Logging) and automated patch management |
+
+![Image 2: Detailed SDLC Model Diagram]
 
 </details>
 
@@ -81,36 +121,32 @@ As a SOC Analyst, it is vital to understand where a tool's power ends:
 <summary><b>Click to Expand: Phase 1 & 2 (Architecture & Systems Integration)</b></summary>
 
 ### Phase 1: Architecture & Asset Management (FIS Standards)
-1. Project Initiation: Final system integration of the MSI workstation.
-2. Requirements Analysis: Comparative analysis of Celeron vs. Ryzen architectures.
-3. Hardware Asset Management: Structured inventory tracking (NIST 800-53 standard).
-4. Logical Network Design: Cisco Packet Tracer diagramming (Latency: <1ms local).
+* Project Initiation: Final system integration of the MSI high-performance workstation.
+* Requirements Analysis: Comparative analysis of Celeron vs. Ryzen architectures to justify upgrades.
+* Hardware Asset Management: Structured inventory tracking and lifecycle management (NIST 800-53 standard).
+* Logical Network Design: Utilizing Cisco Packet Tracer to diagram the network path (Latency: <1ms local).
+![Image 3: Components Procurement & Cisco Packet Tracer Network Diagram]
 
 ### Phase 2: Physical & Systems Integration
-5. Layer 1 Infrastructure: Deployment of physical Cat6 Ethernet.
-6. Firmware Hardening: Establishing Hardware Root of Trust via TPM 2.0 and UEFI Secure Boot.
-7. Hardware Validation: Sustained CPU temp under load: 65–72°C. Zero POST/memory faults.
-8. Electrical Hardening: Implemented external Surge Safe Power Protection.
+* Layer 1 Infrastructure: Deployment of physical Cat6 Ethernet for a stable, high-bandwidth link.
+* Firmware Hardening: Establishing Hardware Root of Trust via TPM 2.0 and UEFI Secure Boot.
+* Hardware Validation: Verification of vitals, RAM speeds, and thermal stability (65–72°C) under high virtualization load.
+* Electrical Hardening: Implemented external Surge Safe Power Protection to provide MOV suppression.
 ![Image 4: Physical PC Interior/Cabling]
 ![Image 5: BIOS Screen showing TPM 2.0 & Secure Boot ENABLED]
 
 </details>
 
 <details>
-<summary><b>Click to Expand: Phase 3 (Implementation & Hardening)</b></summary>
+<summary><b>Click to Expand: Phase 3 (Implementation & Security Hardening)</b></summary>
 
-9. Hardened OS Deployment.
-10. Network Configuration (ICMP verification).
-11. Fail-Secure Connectivity (VPN Kill-Switch).
-12. DNS Anti-Spoofing & Integrity: Enforced Private Encrypted DNS via VPN.
-13. Gateway-Level Security (Rain Router): Edge URL Filtering.
-14. Host-Based Defense: Custom Windows Firewall Outbound Rules.
-15. Layer 2 DNS-Layer Defense: Integrated NextDNS for C2 Threat Intelligence, Newly Registered Domain (NRD) blocking, and DGA protection.
-![Image 11: NextDNS Analytics - Blocking C2 and NRD attempts]
-16. Layer 3 Behavioral Monitoring: Sysmon integration for Process Injection detection.
-![Image 12: Sysmon Event ID 3 - Capturing unauthorized network connection attempt]
-17. Vulnerability Assessment: Nessus Essentials scans to find unpatched software.
-![Image 13: Nessus Scan Results - Clean Baseline]
+* Hardened OS Deployment.
+* Network Configuration: Local IP assignment and connectivity verification via ICMP (Ping).
+* Vulnerability Management (Patch Compliance): Completed full update cycle and configured Auto-Intelligence updates.
+* Fail-Secure Connectivity (VPN Kill-Switch): Implementation of a Permanent Kill-Switch policy via Proton VPN.
+* DNS Anti-Spoofing & Integrity: Enforced Private, Encrypted DNS via the VPN tunnel.
+* Gateway-Level Security (Rain Router): Configured Edge URL Filtering.
+* Host-Based Defense (Windows Firewall): Implemented custom Outbound Traffic Rules for micro-segmentation.
 
 </details>
 
@@ -119,39 +155,63 @@ As a SOC Analyst, it is vital to understand where a tool's power ends:
 ## Phase 4: Validation & SOC Operations
 
 ### Virtualization Deployment (The Technical Sandbox)
-* **Hypervisor Integration:** Successfully deployed multi-node environment on Ryzen 6C/12T platform.
+* **Hypervisor Integration:** Successfully deployed a multi-node virtualization environment using VMware/VirtualBox on the Ryzen 6C/12T platform.
 * **Multi-OS Provisioning:**
-    * **Node 1 (Kali Linux):** Offensive node for internal assessments.
-    * **Node 2 (Ubuntu Desktop/Server):** Linux admin and syslog monitoring (Fintech-targeted).
-    * **Node 3 (Windows 10 Hardened):** Target for security control validation and GPO.
-* **Resource Management:** Optimized allocation for concurrent operation.
-* **Network Segmentation:** Isolated via Virtual NAT/Host-Only adapters.
+    * **Node 1 (Kali Linux):** Configured as the offensive security and penetration testing node for internal assessments.
+    * **Node 2 (Ubuntu Desktop/Server):** Deployed to master Linux systems administration, user permissions, and syslog monitoring (Targeting Fintech infrastructure requirements).
+    * **Node 3 (Windows 10 Hardened):** Maintained as the primary target for security control validation and GPO enforcement.
+* **Network Segmentation:** Isolated the lab environment via Virtual NAT/Host-Only adapters.
 
 ### SOC Auditing & Incident Monitoring
-* established monitoring baseline; total security events reviewed: 1,000+.
+* established a monitoring baseline; total security events reviewed: 1,000+.
 * Key Event IDs: 4624, 4625, 4672, 4688, 4673/4674.
-* **Continuous Maintenance:** Patch Compliance (100% remediation within 48h) and weekly policy audits.
+* **Continuous Maintenance:** Performed service hardening by disabling non-essential background processes; maintained 100% patch remediation rate.
 
 ### Data Resiliency (3-2-1-1-0 Framework)
-* **3 Copies:** Original + 2 backups.
-* **2 Media Types:** Internal HDD + External USB (Air-Gap).
-* **1 Offsite:** Secure Cloud replicate.
-* **1 Immutable:** "Locked" WORM copy.
-* **0 Errors:** Restoration drills proving RTO < 15 minutes.
+* **3 Copies:** Original project files + 2 backup versions.
+* **2 Media Types:** Primary Host HDD (Internal) and Removable USB Media (External).
+* **1 Offsite Replicate:** Archives synced to a secure Cloud location.
+* **1 Immutable:** A "locked" copy (WORM) to prevent lateral ransomware movement.
+* **0 Errors:** Restoration Drills to prove RTO <15 minutes.
 
 ---
 
-## Skills Gained & Target Roles
-* SOC Monitoring & Log Analysis (Event IDs, Sysmon)
-* Vulnerability Management (Nessus, Patch Verification)
-* IAM (Principle of Least Privilege, Admin/Standard segmentation)
-* Endpoint Hardening (TPM, BitLocker, Egress Filtering)
+## Skills Gained Through This Project
 
-**Target Roles:** Junior SOC Analyst, Vulnerability Management Analyst, IAM Analyst, Junior Security Engineer.
+<details>
+<summary><b>Click to Expand: Full Skills List</b></summary>
+
+* **SOC Monitoring & Log Analysis:** Analysis of Windows Security Event Logs to detect authentication failures, unauthorized process creation, privilege escalation attempts, and administrative actions using Event IDs such as 4624, 4625, 4672, 4688, 4673/4674, and 4648.
+* **Incident Detection & Validation:** Simulated real-world security events (unauthorized software installation, blocked privilege escalation, admin-only actions) and validated expected system responses through audit logs.
+* **Vulnerability Management:** Patch verification, CVE remediation tracking, CIS benchmark audits & configuration drift detection. This includes the implementation of Automatic Security Intelligence Updates.
+* **Identity & Access Management (IAM):** Enforcement and validation of the Principle of Least Privilege (PoLP) through Admin vs. Standard user segmentation, UAC enforcement, and privilege auditing.
+* **Endpoint & OS Hardening:** Secure OS deployment with TPM 2.0, Secure Boot, BitLocker full-disk encryption, and reduction of attack surface through system hardening.
+* **Network-Level Security:** Implementation of Fail-Secure connectivity through VPN kill-switch testing, DNS Anti-Spoofing (DoH), and Gateway-level URL Filtering.
+* **Data Loss Prevention (DLP) Fundamentals:** VPN kill-switch testing, full-disk encryption, and restricted user privileges to prevent unauthorized data access and exfiltration.
+* **Backup, Recovery & Resilience:** Implementation and validation of a 3-2-1-1-0 backup strategy, restoration testing, and ransomware-resilient design principles.
+* **Threat Intelligence & DNS Security:** Integration of cloud-based threat feeds to block Command & Control (C2) infrastructure, Newly Registered Domains (NRDs), and Domain Generation Algorithms (DGA).
+* **Advanced Behavioral Analysis:** Utilization of Sysmon (System Monitor) for deep-visibility behavioral logging to detect process injection and stealthy "Living-off-the-Land" (LotL) techniques.
+
+</details>
 
 ---
-**Visual Evidence Finalized**
+
+## Target Roles This Project Prepares Me For
+
+<details>
+<summary><b>Click to Expand: Target Roles & Career Alignment</b></summary>
+
+* **SOC Analyst (Tier 1 / Junior):** Prepared to monitor security alerts, analyze logs, identify suspicious activity, validate security controls, and escalate confirmed incidents. Special emphasis on detecting C2 callbacks and lateral movement.
+* **Vulnerability Management Analyst (Junior / Entry-Level):** Prepared to support vulnerability scanning, patch management, configuration compliance, and remediation tracking. 
+* **IAM / Access Management Analyst (Junior):** Prepared to analyze authentication and authorization events, validate privilege boundaries, and support access control enforcement.
+* **Junior Security Engineer / Associate Security Engineer:** Prepared to assist with secure system builds, endpoint hardening, control validation, and security architecture support.
+* **IT Technician / Junior Systems Administrator:** Prepared to support secure workstation builds, OS deployment, virtualization, monitoring, patching, and backup operations.
+* **Junior Threat Hunter:** Equipped to proactively search for indicators of compromise (IoCs) within DNS logs and host-based behavioral logs using Defense-in-Depth layers.
+
+</details>
+
+---
+
+### Visual Evidence Gallery
 ![Image 9: Final Engineering Station and Windows Event Viewer Security Logs]
-![Image 10: Multi-Node Lab Orchestration - VMware showing Kali, Ubuntu, and Windows 10 Nodes]
-
-
+![Image 10: Multi-Node Lab Orchestration - VMware Workstation Pro]

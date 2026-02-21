@@ -1,6 +1,6 @@
 
 # Secure Workstation Build & Hardened Infrastructure Project
-## IAM & SOC Engineering Lab Lifecycle
+
 
 
 

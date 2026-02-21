@@ -110,6 +110,15 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 ![Image 8: IAM Setup - Admin vs. Standard User account segmentation]
  ![Image 9: Windows Command Prompt showing "General failure" during VPN Hard-Drop test]
 ## Phase 4: Validation & SOC Operations
+### Virtualization Deployment (The Technical Sandbox)
+
+* **Hypervisor Integration:** Successfully deployed a multi-node virtualization environment using VMware/VirtualBox on the Ryzen 6C/12T platform to simulate a corporate enterprise network.
+* **Multi-OS Provisioning:**
+    * **Node 1 (Kali Linux):** Configured as the offensive security and penetration testing node for internal vulnerability assessments.
+    * **Node 2 (Ubuntu Desktop/Server):** Deployed to master Linux systems administration, user permissions, and syslog monitoring (Targeting Fintech infrastructure requirements).
+    * **Node 3 (Windows 10 Hardened):** Maintained as the primary target for security control validation and GPO enforcement.
+* **Resource Management:** Optimized hardware allocation to ensure concurrent operation of all three nodes with zero host-level performance degradation.
+* **Network Segmentation:** Isolated the lab environment via Virtual NAT/Host-Only adapters to prevent cross-contamination between the testing environment and the production host.
 
 ### SOC Auditing & Incident Monitoring
 * **Security Event Analysis:** Established a rigorous monitoring baseline by auditing system logs to distinguish between authorized behavior and potential IOCs (Indicators of Compromise).

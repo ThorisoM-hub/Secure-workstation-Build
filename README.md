@@ -79,7 +79,7 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 ![Image 4: Physical PC Interior/Cabling]  
 ![Image 5: BIOS Screen showing TPM 2.0 & Secure Boot ENABLED]
 
-### Phase 3: Implementation & Security Hardening
+## Phase 3: Implementation & Security Hardening
 
 **Hardened OS Deployment:** Secure installation of Windows Pro, optimized for enterprise security.
 
@@ -95,21 +95,24 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
 
 **Host-Based Defense (Windows Firewall):** Implemented custom Outbound Traffic Rules within Windows Defender Firewall with Advanced Security. Implemented micro-segmentation by blocking specific non-authorized binaries from initiating external connections, simulating anti-exfiltration controls.
 
-> ### Security Logic: What these controls protect against
-> This defensive setup transitions the workstation to a **"Zero Trust"** posture by controlling not just who enters, but what is allowed to leave. Below is the breakdown of the specific threats neutralized by these firewall rules:
->
-> * **The "Security Guard at the Exit" (Data Theft / Egress Filtering)**
->     * **Non-Technical:** Like a bank guard checking every bag at the exit; if you don't have an "Authorized to Carry" badge, you can’t leave with anything.
->     * **Technical:** This is **Egress Filtering**. By controlling outbound traffic, we stop **Data Exfiltration**. Even if malware bypasses initial entry, it cannot "phone home" to an attacker’s server to send stolen passwords or files.
-> * **The "Approved Employee List" (Imposter Employee / Binary Whitelisting)**
->     * **Non-Technical:** The building manager only lets 5 specific employees use the office phone. If your name isn't on the list, you can't call out.
->     * **Technical:** This is **Application-Level Micro-segmentation**. It shifts from "Blacklisting" (blocking known bad apps) to **"Whitelisting"** (only allowing authorized binaries). This stops **"Living-off-the-Land" (LotL)** attacks where hackers try to use built-in Windows tools like PowerShell to reach the web.
-> * **The "Firewalled Rooms" (Spread of Fire / Lateral Movement)**
->     * **Non-Technical:** In a hotel, if a fire starts in the kitchen, steel doors slam shut to keep the smoke from reaching guest rooms.
->     * **Technical:** This is **Host-Based Micro-segmentation**. It prevents **Lateral Movement**. If one application is hacked, the attacker is "trapped" in that process and cannot probe or attack other devices on your local network.
-> * **The "Broken Remote Control" (Backdoor Entry / Reverse Shell)**
->     * **Non-Technical:** A thief sneaks in and tries to use a remote to open the garage for his friends, but you’ve removed the batteries. He’s stuck inside and can't coordinate with his team.
->     * **Technical:** This prevents **Reverse Shells**. Attackers often run a script that "reaches out" to their computer to give them full remote control. Blocking unauthorized binaries from initiating external connections kills this "inside-out" connection.
+### Security Logic: What these controls protect against
+This defensive setup transitions the workstation to a **"Zero Trust"** posture by controlling not just who enters, but what is allowed to leave. Below is the breakdown of the specific threats neutralized by these firewall rules:
+
+**1. The "Security Guard at the Exit" (Data Theft / Egress Filtering)**
+* **Non-Technical:** Like a bank guard checking every bag at the exit; if you don't have an "Authorized to Carry" badge, you can’t leave with anything.
+* **Technical:** This is **Egress Filtering**. By controlling outbound traffic, we stop **Data Exfiltration**. Even if malware bypasses initial entry, it cannot "phone home" to an attacker’s server to send stolen passwords or files.
+
+**2. The "Approved Employee List" (Imposter Employee / Binary Whitelisting)**
+* **Non-Technical:** The building manager only lets 5 specific employees use the office phone. If your name isn't on the list, you can't call out.
+* **Technical:** This is **Application-Level Micro-segmentation**. It shifts from "Blacklisting" (blocking known bad apps) to **"Whitelisting"** (only allowing authorized binaries). This stops **"Living-off-the-Land" (LotL)** attacks where hackers try to use built-in Windows tools like PowerShell to reach the web.
+
+**3. The "Firewalled Rooms" (Spread of Fire / Lateral Movement)**
+* **Non-Technical:** In a hotel, if a fire starts in the kitchen, steel doors slam shut to keep the smoke from reaching guest rooms.
+* **Technical:** This is **Host-Based Micro-segmentation**. It prevents **Lateral Movement**. If one application is hacked, the attacker is "trapped" in that process and cannot probe or attack other devices on your local network.
+
+**4. The "Broken Remote Control" (Backdoor Entry / Reverse Shell)**
+* **Non-Technical:** A thief sneaks in and tries to use a remote to open the garage for his friends, but you’ve removed the batteries. He’s stuck inside and can't coordinate with his team.
+* **Technical:** This prevents **Reverse Shells**. Attackers often run a script that "reaches out" to their computer to give them full remote control. Blocking unauthorized binaries from initiating external connections kills this "inside-out" connection.
 
 ### Critical Blind Spots: What Windows Firewall Cannot Do
 As a SOC Analyst, it is vital to understand where a tool's power ends. While Windows Firewall is powerful, it has "invisible" gaps:
@@ -119,7 +122,7 @@ As a SOC Analyst, it is vital to understand where a tool's power ends. While Win
 * **IP Spoofing & Memory Attacks:** It trusts source information provided by the network card and cannot see "Buffer Overflows" happening entirely inside the RAM.
 
 ### Layer 2: DNS-Layer Defense (Network Infrastructure Intelligence)
-**Tooling:** **NextDNS** (Cloud-Based Intelligence Layer)  
+**Tooling:** **NextDNS** (Cloud-Based Intelligence Layer)
 Since Windows Firewall handles the **"What"** (the program), NextDNS was implemented to handle the **"Where"** (the destination), acting as the "Intelligence Agency" for the workstation.
 
 * **C2 Threat Intelligence (The "Bad Neighborhood" Filter):**

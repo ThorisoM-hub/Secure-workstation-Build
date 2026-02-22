@@ -151,18 +151,37 @@ As a SOC Analyst, it is vital to understand where a tool's power ends. While Win
 * Administrative Bypass: As a host-based defense, an attacker with Local Admin rights can simply run a command to disable the firewall.
 * IP Spoofing & Memory Attacks: It trusts source information provided by the network card and cannot see "Buffer Overflows" happening entirely inside the RAM.
 
-### Layer 2: DNS-Layer Defense (Network Infrastructure Intelligence)
-Tooling: NextDNS (Cloud-Based Intelligence Layer) Since Windows Firewall handles the "What" (the program), NextDNS was implemented to handle the "Where" (the destination), acting as the "Intelligence Agency" for the workstation.
-* C2 Threat Intelligence (The "Bad Neighborhood" Filter): NextDNS maintains a massive, real-time list of Command & Control (C2) "Bad Neighborhoods."
-* Newly Registered Domain (NRD) Blocking: A proactive Vulnerability Management control. By blocking any domain created in the last 30 days, I neutralized the "disposable" infrastructure hackers use for phishing.
-* DGA (Domain Generation Algorithm) Protection: NextDNS uses AI to recognize "gibberish" machine-generated names and blocks them automatically.
-* Anti-Stealth Toggles: Enabled protection against DNS Rebinding and Cryptojacking.
+# Layer 2: DNS-Layer Defense (Network Infrastructure Intelligence)
 
-### Layer 3: Behavioral Monitoring & Vulnerability Assessment
-* Behavioral Logging (Sysmon): Logs Process Injection and lateral movement, providing visibility to detect stealthy movement that the firewall trusts.
-* Vulnerability Assessment (Nessus Essentials/OpenVAS): Implemented periodic scanning to find unpatched software. This allows for Compensating Controls—blocking specific binaries in the firewall until a patch is available.
+**Tooling:** NextDNS (Cloud-Based Intelligence Layer)  
+Since Windows Firewall handles the "What" (the program), NextDNS was implemented to handle the "Where" (the destination), acting as the "Intelligence Agency" for the workstation.
 
-### Defense-in-Depth: Solving the Loopholes
+* **C2 Threat Intelligence (The "Bad Neighborhood" Filter):**
+    * **Non-Technical:** Like an intelligence agency providing a list of "Scam Phone Numbers." Even if an employee is allowed to use the phone, the call is blocked if they try to dial a known scammer.
+    * **Technical:** NextDNS maintains a massive, real-time list of Command & Control (C2) "Bad Neighborhoods." If any app tries to connect to a domain used for hacking, NextDNS kills the connection before it starts.
+* **Newly Registered Domain (NRD) Blocking:**
+    * **Non-Technical:** Blocking all calls from phone numbers created in the last 24 hours. Legitimate businesses don't change their numbers every day; scammers do.
+    * **Technical:** A proactive **Vulnerability Management** control. By blocking any domain created in the last 30 days, I neutralized the "disposable" infrastructure hackers use for one-time phishing attacks.
+* **DGA (Domain Generation Algorithm) Protection:**
+    * **Non-Technical:** Spotting "gibberish" or "coded" language. If someone tries to call a number that looks like random noise (e.g., xhz123.net), the system recognizes it as a machine-generated trap.
+    * **Technical:** Malware uses math to create 1,000 random names a day. NextDNS uses AI to recognize these "gibberish" names and blocks them automatically.
+* **Anti-Stealth Toggles:** Enabled protection against DNS Rebinding and Cryptojacking, stopping browser-based resource theft that typically bypasses standard firewalls.
+
+---
+
+# Layer 3: Behavioral Monitoring & Vulnerability Assessment
+
+### Behavioral Logging (Sysmon)
+* **Non-Technical:** Like a security camera inside the office. The firewall stops people at the door, but Sysmon records if an employee starts acting strangely once they are inside.
+* **Technical:** It logs Process Injection and lateral movement, providing the visibility needed for a **SOC Analyst** to detect stealthy movement that the firewall trusts.
+
+### Vulnerability Assessment (Nessus Essentials/OpenVAS)
+* **Non-Technical:** A "Home Inspection" for digital locks. It searches for windows left unlocked so they can be fixed before a thief finds them.
+* **Technical:** Implemented periodic scanning to find unpatched software. This allows for **Compensating Controls**—blocking specific binaries in the firewall until a patch is available.
+
+---
+
+# Defense-in-Depth: Solving the Loopholes
 The following table illustrates how the secondary layers (NextDNS, Sysmon, Nessus) solve the specific problems that Windows Firewall cannot address alone.
 
 | Windows Firewall Limitation | Secondary Solution | How it Solves the Problem |
@@ -173,15 +192,19 @@ The following table illustrates how the secondary layers (NextDNS, Sysmon, Nessu
 | Zero-Day "Memory" Attacks | Nessus (Vulnerability Scanning) | Identifies unpatched apps so they can be hardened before exploitation. |
 | Domain Fronting | NextDNS (AI Detection) | Detects unusual DNS requests that bypass IP-based firewall rules. |
 
-### Threat & Defense Technical Summary
+---
+
+# Threat & Defense Technical Summary
 
 | Threat (Simple Name) | Technical Threat | Defense Mechanism | How it Protects You |
 | :--- | :--- | :--- | :--- |
-| The "Phone Home" | C2 (Command & Control) | Egress Filtering / NextDNS | Stops malware from contacting the hacker's server. |
+| The "Phone Home" | C2 (Command & Control) | Egress Filtering / NextDNS | Stops malware from contacting the hacker's server for instructions. |
 | The "Imposter Employee" | LotL / LOLBins | Binary-Level Blocking | Prevents built-in tools (PowerShell) from being used maliciously. |
 | The "Backdoor Entry" | Reverse Shell | Auth. Connection Rules | Prevents an internal script from "opening a door" to the outside. |
 | The "Spread of Fire" | Lateral Movement | Micro-segmentation | Traps a hacker in one "box" so they can't jump to other devices. |
+| The "Drafted Zombie" | Botnet Recruitment | Outbound Traffic Control | Prevents the system from being recruited into a zombie army for DDoS. |
 | The "Data Thief" | Exfiltration | Anti-Exfiltration / NRD | Blocks unauthorized apps or new domains from stealing your data. |
+| The "Ghost in the Machine" | Zero-Day Exploits | Compensating Controls | Even if a bug is unknown, the hacker can't "call out" to finish the infection. |
 
 ### Identity & Access Management (IAM)
 Enforcement of Principle of Least Privilege (PoLP) via Admin vs. Standard account segmentation.

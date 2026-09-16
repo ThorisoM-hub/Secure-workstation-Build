@@ -1,4 +1,4 @@
-#  PC Build $ OS Harderning Project
+#  PC Build & OS Harderning Project
 
 ## Table of Contents
 1. [Project Overview](#project-overview)

@@ -116,14 +116,51 @@ Drawing from my Financial Information Systems (FIS) qualification, I applied the
     * Electrical Hardening: Implemented external Surge Safe Power Protection to provide MOV suppression.
 ![Image 4: Physical PC Interior/Cabling] ![Image 5: BIOS Screen showing TPM 2.0 & Secure Boot ENABLED]
 
-### Phase 3: Implementation & Security Hardening
-* **Hardened OS Deployment:** Secure installation of Windows Pro, optimized for enterprise security.
-* **Network Configuration:** Local IP assignment and connectivity verification via ICMP (Ping).
-* **Vulnerability Management (Patch Compliance):** Completed a full Windows Update cycle and configured Automatic Security Intelligence Updates to mitigate Zero-Day exploits and known CVEs.
-* **Fail-Secure Connectivity (VPN Kill-Switch):** Implementation of a Permanent Kill-Switch policy via Proton VPN. Performed a "Hard Drop" test by disabling the physical network interface; verified via Command Prompt ("General failure" results) the immediate termination of all outbound traffic (ICMP/HTTP) to prevent clear-text data leakage outside the encrypted tunnel.
-* **DNS Anti-Spoofing & Integrity:** Enforced the use of Private, Encrypted DNS via the VPN tunnel to mitigate DNS Cache Poisoning and Man-in-the-Middle (MITM) attacks. This ensures that identity-related traffic (login portals) cannot be redirected to malicious IP addresses.
-* **Gateway-Level Security (Rain Router):** Configured Edge URL Filtering via the Rain Web Gateway. Restricted unauthorized domains (e.g., facebook.com) at the DNS level to reduce the external attack surface and mitigate Shadow IT risks.
-* **Host-Based Defense (Windows Firewall):** Implemented custom Outbound Traffic Rules within Windows Defender Firewall with Advanced Security. Implemented micro-segmentation by blocking specific non-authorized binaries from initiating external connections, simulating anti-exfiltration controls.
+### Phase 3: Enterprise Workstation Provisioning & Configuration
+Following hardware assembly and firmware validation, the workstation was provisioned according to enterprise deployment practices to mirror corporate operational and end-user delivery standards.
+
+9. **Operating System Deployment & Governance:**
+   * Installed Windows 11 Pro from bootable USB installation media and configured default storage partitions.
+   * **Enterprise Naming Convention:** Renamed the computer from default naming strings to a standardized asset format (`ZAF-JHB-WS01`) for inventory and tracking.
+   * Completed initial workstation setup and verified successful operating system deployment and activation status.
+10. **Driver Integration & System Resiliency Baseline:**
+    * Installed AMD motherboard chipset drivers alongside dedicated LAN, GPU, and audio drivers.
+    * Verified all hardware components via Device Manager to ensure no missing, unknown, or yellow-flagged drivers remained.
+    * **System Restore Configuration:** Enabled System Restore and generated a clean baseline restore point directly after driver verification to secure the device health status before third-party staging.
+11. **Enterprise Software Installation & Baseline Staging:**
+    * Installed and validated commonly deployed business productivity and support software including: **Microsoft Office (365 Apps)**, **Google Chrome**, **Adobe Acrobat Reader**, **7-Zip**, **Notepad++**, and **Visual Studio Code**.
+    * **Browser Configuration:** Standardized application settings across browsers, configuring homepages, default download paths, and verifying base security settings.
+    * **Peripheral Verification & Printer Simulation:** Tested local hardware features (Speakers, Microphone, Ethernet, USB ports) and installed a default virtual printer pipeline (Microsoft Print to PDF) to simulate standard office printer setups.
+
+### Phase 4: Implementation & Security Hardening
+
+### Identity & Access Management (IAM)
+* **Principle of Least Privilege (PoLP) Enforcement:** Successfully established strict Admin versus Standard user account segmentation across the workstation asset (`ZAF-JHB-WS01`).
+* **IAM Control:** Segmented Backup-Admin privileges to ensure that only authorized administrative identities possess the explicit permissions required to modify, alter, or delete critical archives.
+* **Validation Action – Unauthorized Software Installation Test:** Simulated an unauthorized software installation payload from a Standard User account context to validate technical enforcement of the Principle of Least Privilege. 
+  * **Execution Result:** The installation attempt was successfully blocked by User Account Control (UAC) and administrative permission policies.
+  * **Event Logging & Telemetry Triggers:** 
+    * *Windows Security Event Viewer:* Captured Event ID 4624 (Successful Logon), Event ID 4625 (Failed Logon / Access Denied), Event ID 4672 (Special Privileges Assigned to New Logon), Event ID 4688 (Process Creation with Command-Line Details), and Event IDs 4673 / 4674 (Sensitive Privilege Use & Privilege Object Access Denied).
+    * *Sysmon Behavioral Telemetry:* Captured Sysmon Event ID 1 (Process Creation) logging the blocked binary execution attempt, alongside Sysmon Event ID 3 (Network Connection) monitoring any unauthorized telemetry or connection attempts initiated during the installer lifecycle.
+
+### Data-at-Rest Encryption & Protection
+* **Full-Disk Encryption:** Implemented enterprise-grade full-disk encryption via **BitLocker**, cryptographically anchored directly to the hardware Trusted Platform Module (**TPM 2.0**) for boot integrity.
+* **Data Protection Framework (The "Digital Safety Net"):** Engineered and validated a professional **3-2-1-1-0 Data Resiliency Framework** tailored for critical assets (`Thoriso_critical_files.zip`):
+  * **3 Copies:** Preserved 3 total instances comprising the original active project files plus 2 independent backup versions.
+  * **2 Media Types:** Distributed across 2 distinct storage media types, utilizing the Primary Host HDD (Internal) and Removable USB Media (External/Logical Air-Gap).
+  * **1 Offsite Replicate:** Maintained 1 secure offsite replication archive synced directly to a secure Cloud location.
+  * **1 Immutable Copy:** Secured 1 immutable, write-once-read-many (**WORM**) "locked" copy to completely prevent modification, deletion, or lateral ransomware encryption.
+  * **0 Errors:** Verified via rigorous, time-tested **Restoration Drills** proving a Recovery Time Objective (**RTO**) of less than 15 minutes (<15 min).
+
+### Network Configuration & System Hardening
+* **Network Configuration:** Executed local IP address assignment and verified network layer reachability and interface connectivity via Internet Control Message Protocol (**ICMP Ping**).
+* **Vulnerability Management (Patch Compliance):** Completed a full system Windows Update cycle and configured Automatic Security Intelligence Updates to proactively mitigate Zero-Day exploits and known Common Vulnerabilities and Exposures (**CVEs**).
+* **Fail-Secure Connectivity (VPN Kill-Switch):** Deployed and enforced a Permanent Kill-Switch security policy utilizing Proton VPN. 
+  * *Validation Test ("Hard Drop"):* Performed a physical network interface disconnection test; verified via Windows Command Prompt diagnostic outputs ("General failure" response metrics) that all active outbound traffic (ICMP/HTTP/HTTPS) was instantly terminated to prevent clear-text data leakage outside the encrypted tunnel.
+* **DNS Anti-Spoofing & Integrity:** Enforced Private, Encrypted DNS routing through the secure tunnel pipeline to mitigate DNS Cache Poisoning and Man-in-the-Middle (**MITM**) interception vectors, ensuring identity and authentication traffic cannot be redirected to malicious infrastructure.
+* **Gateway-Level Security (Rain Router):** Configured Edge URL Filtering policies at the gateway via the Rain Web Gateway. Restricted unauthorized and non-work-related domains (e.g., social media targets like facebook.com) at the DNS infrastructure level to minimize the external attack surface and mitigate Shadow IT risks.
+* **Host-Based Defense (Windows Firewall):** Implemented custom Outbound Traffic Rules within Windows Defender Firewall with Advanced Security. Deployed application-level micro-segmentation by explicitly blocking non-authorized binaries from initiating unapproved external connections, simulating rigorous anti-exfiltration controls.
+
 
 ### Security Logic: What these controls protect against
 This defensive setup transitions the workstation to a "Zero Trust" posture by controlling not just who enters, but what is allowed to leave. Below is the breakdown of the specific threats neutralized by these firewall rules:
@@ -206,20 +243,6 @@ The following table illustrates how the secondary layers (NextDNS, Sysmon, Nessu
 | The "Data Thief" | Exfiltration | Anti-Exfiltration / NRD | Blocks unauthorized apps or new domains from stealing your data. |
 | The "Ghost in the Machine" | Zero-Day Exploits | Compensating Controls | Even if a bug is unknown, the hacker can't "call out" to finish the infection. |
 
-### Identity & Access Management (IAM)
-Enforcement of Principle of Least Privilege (PoLP) via Admin vs. Standard account segmentation.
-* IAM Control: Segmented Backup-Admin privileges to ensure only authorized identities can modify or delete the archive.
-* Validation Action – Unauthorized Software Installation Test:Simulated an unauthorized software installation from a Standard User account to validate enforcement of the Principle of Least Privilege. The installation was blocked by UAC/admin controls (logged in Event Viewer: Event ID 4624 (Logon), Event ID 4625 (Failed Logon), Event ID 4672 (Special Privileges), Event ID 4688 (Process Creation), and Event IDs 4673 / 4674 (Sensitive Privilege Use / Privilege Object Access Denied)).
-
-### Data-at-Rest Encryption & Protection
-* Full-disk encryption via BitLocker, anchored to hardware TPM.
-* Data Protection: Backup & Storage Solutions (The "Digital Safety Net"): I engineered a professional 3-2-1-1-0 Data Resiliency Framework for "Thoriso_critical_files.zip":
-    * 3 Copies: Original project files + 2 backup versions.
-    * 2 Media Types: Primary Host HDD (Internal) and Removable USB Media (External/Logical Air-Gap).
-    * 1 Offsite Replicate: Archives synced to a secure Cloud location.
-    * 1 Immutable: A "locked" copy (WORM) to prevent lateral ransomware movement.
-    * 0 Errors: Restoration Drills to prove RTO <15 minutes.
-
 ![Image 6: Windows Security Dashboard (Green Checks)] ![Image 7: BitLocker Encryption Status & VPN Kill Switch settings] ![Image 8: IAM Setup - Admin vs. Standard User account segmentation] ![Image 9: Windows Command Prompt showing "General failure" during VPN Hard-Drop test] ![Image 10: Windows Firewall - Custom Outbound Rules for Micro-segmentation] ![Image 11: NextDNS Analytics - Blocking C2 and NRD attempts] ![Image 12: Sysmon Event ID 3 - Capturing unauthorized network connection attempt] ![Image 13: Nessus Scan Results - Clean Baseline & Remediation Report]
 
 </details>
@@ -227,7 +250,7 @@ Enforcement of Principle of Least Privilege (PoLP) via Admin vs. Standard accoun
 ---
 
 <a name="phase-4-validation--soc-operations"></a>
-## Phase 4: Validation & SOC Operations
+## Phase 5: Validation & SOC Operations
 
 <details>
 <summary><b>Click to Expand: Virtualization & Monitoring Metrics</b></summary>
@@ -270,7 +293,9 @@ Enforcement of Principle of Least Privilege (PoLP) via Admin vs. Standard accoun
 
 <details>
 <summary><b>Click to Expand: Full Skills List</b></summary>
-
+   
+* **Enterprise Workstation Provisioning:**operating system deployment, disk partitioning, computer identity customization, driver integration management, and core application baseline staging.
+* **Desktop Configuration Management:** Deploying system restoration tools, implementing power plans, and configuring virtual printer pathways to handle legacy corporate software needs.
 * **SOC Monitoring & Log Analysis:** Analysis of Windows Security Event Logs to detect failures and unauthorized actions using Event IDs such as 4624, 4625, 4672, 4688, 4673/4674, and 4648.
 * **Incident Detection & Validation:** Simulated real-world security events and validated expected system responses through audit logs.
 * **Vulnerability Management:** Patch verification, CVE remediation tracking, CIS benchmark audits & configuration drift detection.
